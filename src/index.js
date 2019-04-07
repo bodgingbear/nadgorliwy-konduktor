@@ -146,6 +146,7 @@ class Boot extends Phaser.Scene {
     this.load.image("sumoAnim0", sumoAnim0Img);
     this.load.image("sumoAnim1", sumoAnim1Img);
     this.load.audio('theme', [ 'https://legiec.io/NKUTDP/Kyoto Train Station Ambience 3D Sounds Japan (Sleep Rest Study Tokyo ASMR).mp3']);
+    this.load.audio('bij', [ 'https://legiec.io/NKUTDP/bij.mp3']);
     this.load.audio('sumo', ['https://legiec.io/NKUTDP/Sumo.wav']);
     this.load.audio('passenger', ['https://legiec.io/NKUTDP/1.wav']);
     this.load.audio('gates', ['https://legiec.io/NKUTDP/2.wav']);
@@ -153,9 +154,10 @@ class Boot extends Phaser.Scene {
 
   create() {
     this.music = this.sound.add('theme', {loop: true, volume: 0.5});
+    this.bij = this.sound.add('bij', {loop: true, volume: 0.3});
 
     this.music.play();
-
+    this.bij.play();
     this.sumoSound = this.sound.add('sumo')
     this.gatesSound = this.sound.add('gates')
 
