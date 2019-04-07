@@ -338,13 +338,13 @@ class Boot extends Phaser.Scene {
             && passengerSprite.body.y <= 310 &&
             --passengerSprite.hp === 0
           ) {
+            if (!this.trainLeft) {
               this.sound.play('passenger')
               passengerSprite.destroy()
-              if (this.trainLeft) {
-                this.addToScore(passengerSprite);
-              }
+              this.addToScore(passengerSprite);
               hasDeleted = true
               continue
+            }
           }
 
           newPassengerArr.push(passengerSprite)
