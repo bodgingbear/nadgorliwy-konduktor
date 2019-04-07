@@ -338,26 +338,27 @@ class Boot extends Phaser.Scene {
               console.log(passengerSprite.body.x, conductor.x)
             }
 
+
           if(
             passengerSprite.x >= conductor.x - 50
             && passengerSprite.x <= conductor.x + 50
-            && passengerSprite.y <= 390 &&
-            --passengerSprite.hp === 0
+            && passengerSprite.y <= 390
           ) {
-            // if (!this.trainLeft) {
-            if(passengerSprite.isSumo) {
+            if(this.sumoArr.indexOf(passengerSprite) !== -1) {
               this.sound.play('sumo')
-            } else {
-
-              this.sound.play('passenger')
             }
 
-              passengerSprite.destroy()
-              this.addToScore(passengerSprite);
-              hasDeleted = true
-            // }
+            if(--passengerSprite.hp === 0) {
+              // if (!this.trainLeft) {
 
-            continue
+                this.sound.play('passenger')
+                passengerSprite.destroy()
+                this.addToScore(passengerSprite);
+                hasDeleted = true
+              // }
+
+              continue
+            }
           }
 
           newPassengerArr.push(passengerSprite)
