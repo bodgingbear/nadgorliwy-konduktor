@@ -29,6 +29,8 @@ class Boot extends Phaser.Scene {
     this.combo = 1;
 
     window.addToScore = this.addToScore.bind(this);
+    this.startTime = new Date();
+    this.trainLeft = false;
   }
 
   addToScore(points = 10) {
@@ -36,6 +38,25 @@ class Boot extends Phaser.Scene {
 
     this.scoreText.setText(`Score:  ${this.score}`);
     this.comboText.setText(`Combo  x${this.combo}`);
+  }
+
+  trainLeave() {
+    this.trainLeft = true;
+    this.trainDoor.anims.restart();
+
+    this.tweens.add({
+      targets: [
+        this.trainInterior,
+        this.trainExterior,
+        this.trainDoor
+      ],
+      x: '+=100',               // '+=100'
+      y: 0,               // '+=100'
+      ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+      duration: 100,
+      repeat: 0,
+      yoyo: false
+    });
   }
 
   preload() {
@@ -59,18 +80,18 @@ class Boot extends Phaser.Scene {
   }
 
   create() {
-    const background = this.add.sprite(0, 0, "trainBG")
-    background.setOrigin(0, 0);
-    background.setScale(5);
-
-    const trainInterior = this.add.sprite(0, 0, "trainInterior")
-    trainInterior.setOrigin(0, 0);
-    trainInterior.setScale(5);
-
-    const trainExterior = this.add.sprite(0, 0, "trainExterior")
-    trainExterior.setOrigin(0, 0);
-    trainExterior.setScale(5);
-
+    this.background = this.add.sprite(0, 0, "trainBG")
+    this.background.setOrigin(0, 0);
+    this.background.setScale(5);
+  
+    this.trainInterior = this.add.sprite(0, 0, "trainInterior")
+    this.trainInterior.setOrigin(0, 0);
+    this.trainInterior.setScale(5);
+  
+    this.trainExterior = this.add.sprite(0, 0, "trainExterior")
+    this.trainExterior.setOrigin(0, 0);
+    this.trainExterior.setScale(5);
+  
     this.anims.create({
       key: 'door-open',
       frames: [
@@ -85,6 +106,20 @@ class Boot extends Phaser.Scene {
       repeat: 0
     });
 
+    this.anims.create({
+      key: 'door-close',
+      frames: [
+        { key: 'trainDoorAnim5' },
+        { key: 'trainDoorAnim4' },
+        { key: 'trainDoorAnim3' },
+        { key: 'trainDoorAnim2' },
+        { key: 'trainDoorAnim1' },
+        { key: 'trainDoorAnim0' },
+      ],
+      frameRate: 8,
+      repeat: 0
+    });
+  
     this.anims.create({
       key: 'passenger1anim',
       frames: [
@@ -104,11 +139,18 @@ class Boot extends Phaser.Scene {
       frameRate: 8,
       repeat: -1
     });
+  
+    this.trainDoor = this.add.sprite(0, 0, "trainDoorAnim0")
+    this.trainDoor.setOrigin(0, 0);
+    this.trainDoor.setScale(5);
+    this.trainDoor.play('door-open');
 
-    const trainDoor = this.add.sprite(0, 0, "trainDoorAnim0")
-    trainDoor.setOrigin(0, 0);
-    trainDoor.setScale(5);
-    trainDoor.play('door-open');
+    this.progressBar = this.add.graphics();
+    const progressBox = this.add.graphics();
+    progressBox.fillStyle(0xffffff, 0.8);
+    progressBox.fillRect(24, 400 + 270 - 24, 320, 50);
+
+    this.progressBar.fillStyle(0xffffff, 0.8);
 
     this.scoreText = this.add.text(
       16,
@@ -190,11 +232,20 @@ class Boot extends Phaser.Scene {
       if(!passengerSprite.body)
         continue
 
-      if (passengerSprite.body.y < 230) {
+      if (passengerSprite.body.y < 230 || this.trainLeft) {
         passengerSprite.body.velocity.y = 0;
       } else {
         passengerSprite.body.velocity.y = -100;
       }
+    }
+
+    const timeElapsed = new Date() - this.startTime;
+    const percentageOfTimeToLeave = timeElapsed / 2000;
+    // const percentageOfTimeToLeave = timeElapsed / 10000;
+    this.progressBar.fillRect(34, 400 + 280 - 24, 300 * Math.min(1, percentageOfTimeToLeave), 30);
+
+    if (percentageOfTimeToLeave > 1) {
+      this.trainLeave();
     }
   }
 
