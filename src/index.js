@@ -83,7 +83,7 @@ class Boot extends Phaser.Scene {
     this.tweens.add({
       targets: andOneText,
       x: passenger.x + 50,
-      y: passenger.y - 50,  
+      y: passenger.y - 50,
       alpha: 0,
       ease: 'Cubic',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
       duration: 1000,
@@ -144,17 +144,29 @@ class Boot extends Phaser.Scene {
 
     this.load.image("sumoAnim0", sumoAnim0Img);
     this.load.image("sumoAnim1", sumoAnim1Img);
+    this.load.audio('theme', [ 'https://legiec.io/NKUTDP/Kyoto Train Station Ambience 3D Sounds Japan (Sleep Rest Study Tokyo ASMR).mp3']);
+    this.load.audio('sumo', ['https://legiec.io/NKUTDP/Sumo.wav']);
+    this.load.audio('passenger', ['https://legiec.io/NKUTDP/1.wav']);
+    this.load.audio('gates', ['https://legiec.io/NKUTDP/2.wav']);
   }
 
   create() {
+    this.music = this.sound.add('theme', {loop: true, volume: 0.5});
+
+    this.music.play();
+
+    this.sumoSound = this.sound.add('sumo')
+    this.gatesSound = this.sound.add('gates')
+
+
     this.background = this.add.sprite(0, 0, "trainBG")
     this.background.setOrigin(0, 0);
     this.background.setScale(5);
-  
+
     this.trainInterior = this.add.sprite(-this.cameras.main.width, 0, "trainInterior")
     this.trainInterior.setOrigin(0, 0);
     this.trainInterior.setScale(5);
-  
+
     this.trainExterior = this.add.sprite(-this.cameras.main.width, 0, "trainExterior")
     this.trainExterior.setOrigin(0, 0);
     this.trainExterior.setScale(5);
@@ -226,7 +238,7 @@ class Boot extends Phaser.Scene {
       frameRate: 8,
       repeat: -1
     });
-  
+
     this.trainDoor = this.add.sprite(-this.cameras.main.width, 0, "trainDoorAnim0")
     this.trainDoor.setOrigin(0, 0);
     this.trainDoor.setScale(5);
@@ -301,30 +313,32 @@ class Boot extends Phaser.Scene {
       conductor.x = Math.min(conductor.x + 430, 1070)
     })
 
-    if (flaga) {
-      flaga = false;
-  
+
+    if(flaga) {
+      flaga = false
+
       const keyShoot = this.input.keyboard.addKey('Q')
       keyShoot.on('down', () => {
         const newPassengerArr = []
         let hasDeleted = false
-  
+
         for(let i in this.passengersArr) {
           const passengerSprite = this.passengersArr[i]
           if(hasDeleted) {
             newPassengerArr.push(passengerSprite)
             continue
           }
-  
+
           if(!passengerSprite.body)
             continue
-  
+
           if(
             passengerSprite.body.x >= conductor.x - 150
             && passengerSprite.body.x <= conductor.x + 150
             && passengerSprite.body.y <= 310 &&
             --passengerSprite.hp === 0
           ) {
+              this.sound.play('passenger')
               passengerSprite.destroy()
               if (this.trainLeft) {
                 this.addToScore(passengerSprite);
@@ -332,10 +346,10 @@ class Boot extends Phaser.Scene {
               hasDeleted = true
               continue
           }
-  
+
           newPassengerArr.push(passengerSprite)
         }
-  
+
         this.passengersArr = newPassengerArr
       })
     }
