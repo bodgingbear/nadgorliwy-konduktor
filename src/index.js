@@ -87,12 +87,12 @@ class Boot extends Phaser.Scene {
     logo.setScale(5);
     logo.play('passenger1anim');
 
-    const leftArrow = this.input.keyboard.addKey('W')
+    const { left: leftArrow, right: rightArrow } = this.input.keyboard.createCursorKeys();
+
     leftArrow.on('down', () => {
       logo.x = Math.max(logo.x - 430, 210)
     })
   
-    const rightArrow = this.input.keyboard.addKey('E')
     rightArrow.on('down', () => {
       logo.x = Math.min(logo.x + 430, 1070)
     })
