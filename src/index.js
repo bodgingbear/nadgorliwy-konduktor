@@ -34,6 +34,7 @@ class Boot extends Phaser.Scene {
   constructor(config) {
     super(config);
     this.passengersArr = []
+    this.sumoArr = []
     this.score = 0;
     this.highScore = localStorage.getItem('hs');
     this.combo = 1;
@@ -397,6 +398,23 @@ class Boot extends Phaser.Scene {
     const percentageOfTimeToLeave = timeElapsed / (levels[currentLevel].timeToLeave * 1000);
     this.progressBar.fillRect(34, 400 + 280 - 24, 300 * Math.min(1, percentageOfTimeToLeave), 30);
 
+    this.sumoArr.forEach(p => {
+      if (!p.body) {
+        p.rect.clear();
+        return;
+      }
+
+      if (!p.rect) {
+        p.rect = this.add.graphics();
+      }
+
+      p.rect.clear();
+
+      p.rect.fillStyle(0xff0000, 1);
+      const hpp = p.hp / 10;
+      p.rect.fillRect(p.body.x, p.body.y - p.body.height / 2, 100 * hpp, 10);
+    });
+
     if (percentageOfTimeToLeave > 1 && !this.trainLeft) {
       if (this.passengersArr.length > 0) {
         this.hpText.setText(`HP:  ${this.hp--}`);
@@ -411,7 +429,6 @@ class Boot extends Phaser.Scene {
     game,
     { rowOnePassengers, rowTwoPassengers, rowThreePassengers }
   ) {
-
     for(const passenger of rowOnePassengers) {
       const passengerTime = typeof passenger === 'number' ? passenger : passenger.time
       const isSumo = typeof passenger !== 'number'
@@ -425,11 +442,16 @@ class Boot extends Phaser.Scene {
           isSumo ? 10 : 1,
         );
         this.passengersArr.push(passenger);
+
+        if (isSumo) {
+          this.sumoArr.push(passenger);
+        }
       }, passengerTime)
     }
     for(const passenger of rowTwoPassengers) {
       const passengerTime = typeof passenger === 'number' ? passenger : passenger.time
       const isSumo = typeof passenger !== 'number'
+
       setTimeout(() => {
         const passenger = createPassenger(
           game,
@@ -441,11 +463,15 @@ class Boot extends Phaser.Scene {
         );
 
         this.passengersArr.push(passenger);
+        if (isSumo) {
+          this.sumoArr.push(passenger);
+        }
       }, passengerTime)
     }
     for(const passenger of rowThreePassengers) {
       const passengerTime = typeof passenger === 'number' ? passenger : passenger.time
       const isSumo = typeof passenger !== 'number'
+
       setTimeout(() => {
         const passenger = createPassenger(
           game,
@@ -456,6 +482,9 @@ class Boot extends Phaser.Scene {
           isSumo ? 10 : 1,
         );
         this.passengersArr.push(passenger);
+        if (isSumo) {
+          this.sumoArr.push(passenger);
+        }
       }, passengerTime)
     }
   }
