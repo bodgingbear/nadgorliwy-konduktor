@@ -208,7 +208,7 @@ class Boot extends Phaser.Scene {
         if(
           passengerSprite.body.x >= conductor.x - 150
           && passengerSprite.body.x <= conductor.x + 150
-          && passengerSprite.body.y <= 250
+          && passengerSprite.body.y <= 310
         ) {
             console.log('destroy')
             passengerSprite.destroy()
@@ -235,13 +235,13 @@ class Boot extends Phaser.Scene {
       if (passengerSprite.body.y < 230 || this.trainLeft) {
         passengerSprite.body.velocity.y = 0;
       } else {
-        passengerSprite.body.velocity.y = -100;
+        passengerSprite.body.velocity.y = -200;
       }
     }
 
     const timeElapsed = new Date() - this.startTime;
-    const percentageOfTimeToLeave = timeElapsed / 2000;
-    // const percentageOfTimeToLeave = timeElapsed / 10000;
+    // const percentageOfTimeToLeave = timeElapsed / 2000;
+    const percentageOfTimeToLeave = timeElapsed / 10000;
     this.progressBar.fillRect(34, 400 + 280 - 24, 300 * Math.min(1, percentageOfTimeToLeave), 30);
 
     if (percentageOfTimeToLeave > 1) {
