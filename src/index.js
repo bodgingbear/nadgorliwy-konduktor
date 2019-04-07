@@ -352,20 +352,12 @@ class Boot extends Phaser.Scene {
             if(this.sumoArr.indexOf(passengerSprite) !== -1) {
               this.sound.play('sumo')
             }
-            // if (!this.trainLeft) {
-              this.addToScore(passengerSprite);
-              this.sound.play('passenger')
-              passengerSprite.rect.clear();
-              passengerSprite.destroy()
-              hasDeleted = true
-            // }
-
             if(--passengerSprite.hp === 0) {
               // if (!this.trainLeft) {
-
+                this.addToScore(passengerSprite);
                 this.sound.play('passenger')
                 passengerSprite.destroy()
-                this.addToScore(passengerSprite);
+                passengerSprite.rect.clear();
                 hasDeleted = true
               // }
 
