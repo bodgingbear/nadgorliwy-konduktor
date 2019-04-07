@@ -21,6 +21,8 @@ import { createPassenger } from './Passenger';
 import { levels } from './levels'
 import p1 from "./assets/pixil-layer-P1.png";
 
+let currentLevel = 0;
+
 class Boot extends Phaser.Scene {
   constructor(config) {
     super(config);
@@ -42,9 +44,10 @@ class Boot extends Phaser.Scene {
 
   trainLeave() {
     this.trainLeft = true;
-    this.trainDoor.anims.restart();
+    // this.trainDoor.anims.restart();
+    this.trainDoor.anims.playReverse('close-door');
 
-    const tween = this.tweens.add({
+    this.tweens.add({
       targets: [
         this.trainInterior,
         this.trainExterior,
@@ -54,8 +57,15 @@ class Boot extends Phaser.Scene {
       y: 0,               // '+=100'
       ease: 'Cubic',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
       duration: 500,
+      delay: 800,
       repeat: 0,            // -1: infinity
-      yoyo: false
+      yoyo: false,
+      onComplete: () => {
+        this.scene.restart();
+        currentLevel++;
+        this.trainLeft = false;
+        this.startTime = new Date();
+      }
     });
   }
 
@@ -102,7 +112,7 @@ class Boot extends Phaser.Scene {
         { key: 'trainDoorAnim4' },
         { key: 'trainDoorAnim5' },
       ],
-      frameRate: 8,
+      frameRate: 30,
       repeat: 0
     });
 
@@ -116,7 +126,7 @@ class Boot extends Phaser.Scene {
         { key: 'trainDoorAnim1' },
         { key: 'trainDoorAnim0' },
       ],
-      frameRate: 8,
+      frameRate: 30,
       repeat: 0
     });
 
@@ -236,7 +246,7 @@ class Boot extends Phaser.Scene {
       // yoyo: false,
       onComplete: () => {
         this.trainDoor.play('door-open');
-        this.setupLevel(this, levels[3], this.passengersArr)
+        this.setupLevel(this, levels[currentLevel], this.passengersArr)
       }
     });
   }
@@ -255,10 +265,10 @@ class Boot extends Phaser.Scene {
 
     const timeElapsed = new Date() - this.startTime;
     // const percentageOfTimeToLeave = timeElapsed / 2000;
-    const percentageOfTimeToLeave = timeElapsed / (levels[3].timeToLeave * 1000);
+    const percentageOfTimeToLeave = timeElapsed / (levels[currentLevel].timeToLeave * 1000);
     this.progressBar.fillRect(34, 400 + 280 - 24, 300 * Math.min(1, percentageOfTimeToLeave), 30);
 
-    if (percentageOfTimeToLeave > 1) {
+    if (percentageOfTimeToLeave > 1 && !this.trainLeft) {
       this.trainLeave();
     }
   }
