@@ -75,6 +75,6 @@ export const levels = [
             3500,
             4800
         ],
-        timeToLeave: 9
+        timeToLeave: 10
     }
 ]

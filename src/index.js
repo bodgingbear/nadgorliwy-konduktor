@@ -319,6 +319,7 @@ class Boot extends Phaser.Scene {
 
       const keyShoot = this.input.keyboard.addKey('Q')
       keyShoot.on('down', () => {
+        console.log(1)
         const newPassengerArr = []
         let hasDeleted = false
 
@@ -332,19 +333,24 @@ class Boot extends Phaser.Scene {
           if(!passengerSprite.body)
             continue
 
+            if(passengerSprite.body.y <= 310) {
+              console.log(passengerSprite.body.x, conductor.x)
+            }
+
           if(
             passengerSprite.body.x >= conductor.x - 150
             && passengerSprite.body.x <= conductor.x + 150
             && passengerSprite.body.y <= 310 &&
             --passengerSprite.hp === 0
           ) {
-            if (!this.trainLeft) {
+            // if (!this.trainLeft) {
               this.sound.play('passenger')
               passengerSprite.destroy()
               this.addToScore(passengerSprite);
               hasDeleted = true
-              continue
-            }
+            // }
+
+            continue
           }
 
           newPassengerArr.push(passengerSprite)
@@ -416,7 +422,7 @@ class Boot extends Phaser.Scene {
           800 + Math.random() * 100,
           isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
           isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
-          isSumo ? 20 : 1,
+          isSumo ? 10 : 1,
         );
         this.passengersArr.push(passenger);
       }, passengerTime)
@@ -431,7 +437,7 @@ class Boot extends Phaser.Scene {
           800 + Math.random() * 100,
           isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
           isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
-          isSumo ? 20 : 1,
+          isSumo ? 10 : 1,
         );
 
         this.passengersArr.push(passenger);
@@ -447,7 +453,7 @@ class Boot extends Phaser.Scene {
           800 + Math.random() * 100,
           isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
           isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
-          isSumo ? 20 : 1,
+          isSumo ? 10 : 1,
         );
         this.passengersArr.push(passenger);
       }, passengerTime)
