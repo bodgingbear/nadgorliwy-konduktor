@@ -35,7 +35,7 @@ class Boot extends Phaser.Scene {
     this.score += points * this.combo++;
 
     this.scoreText.setText(`Score:  ${this.score}`);
-    this.comboText.setText('Combo  x' + this.combo);
+    this.comboText.setText(`Combo  x${this.combo}`);
   }
 
   preload() {
@@ -193,6 +193,12 @@ const config = {
   width: 1280,
   height: 720,
   scene: Boot,
+  scale: {
+    parent: 'yourgamediv',
+    mode: Phaser.Scale.FIT,
+    width: 1280,
+    height: 720,
+  },
   pixelArt: true,
   physics: {
     default: 'arcade',
