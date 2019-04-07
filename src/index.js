@@ -13,8 +13,14 @@ import trainDoorAnim5Img from "./assets/pixil-metro5.png";
 import passenger1anim0Img from "./assets/pixil-layer-P1-0.png";
 import passenger1anim1Img from "./assets/pixil-layer-P1-1.png";
 
+import passenger2anim0Img from "./assets/pixil-layer-P2-0.png";
+import passenger2anim1Img from "./assets/pixil-layer-P2-1.png";
+
 import conductorAnim0Img from "./assets/pixil-layer-Conductor-0.png";
 import conductorAnim1Img from "./assets/pixil-layer-Conductor-1.png";
+
+import sumoAnim0Img from "./assets/pixil-layer-Sumo-0.png";
+import sumoAnim1Img from "./assets/pixil-layer-Sumo-1.png";
 
 import { createPassenger } from './Passenger';
 
@@ -22,24 +28,69 @@ import { levels } from './levels'
 import p1 from "./assets/pixil-layer-P1.png";
 
 let currentLevel = 0;
+let flaga = true;
 
 class Boot extends Phaser.Scene {
   constructor(config) {
     super(config);
     this.passengersArr = []
     this.score = 0;
+    this.highScore = localStorage.getItem('hs');
     this.combo = 1;
+    this.hp = 3;
 
-    window.addToScore = this.addToScore.bind(this);
     this.startTime = new Date();
     this.trainLeft = false;
   }
 
-  addToScore(points = 10) {
-    this.score += points * this.combo++;
+  addToScore(passenger, points = 10) {
+    const s = points * this.combo++
+    this.score += s;
+    if (this.score > this.highScore) {
+      if (!this.highScore) {
+        this.hsText = this.add.text(
+          16,
+          56,
+          'High score:  ' + this.highScore,
+          {
+            fontSize: '32px',
+            fill: '#fff',
+            fontFamily: 'Pixel miners'
+          }
+        );
+      }
+
+      this.highScore = this.score;
+
+      this.hsText.setText('High score:  ' + this.highScore);
+      localStorage.setItem('hs', this.highScore);
+    }
 
     this.scoreText.setText(`Score:  ${this.score}`);
     this.comboText.setText(`Combo  x${this.combo}`);
+
+    const andOneText = this.add.text(
+      passenger.x + 50,
+      passenger.y,
+      `+${s}`,
+      {
+        fontSize: '24px',
+        fill: '#fff',
+        fontFamily: 'Pixel miners'
+      }
+    );
+
+    this.tweens.add({
+      targets: andOneText,
+      x: passenger.x + 50,
+      y: passenger.y - 50,  
+      alpha: 0,
+      ease: 'Cubic',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+      duration: 1000,
+      delay: 0,
+      repeat: 0,            // -1: infinity
+      yoyo: false,
+    });
   }
 
   trainLeave() {
@@ -85,8 +136,14 @@ class Boot extends Phaser.Scene {
     this.load.image("passenger1anim0", passenger1anim0Img);
     this.load.image("passenger1anim1", passenger1anim1Img);
 
+    this.load.image("passenger2anim0", passenger2anim0Img);
+    this.load.image("passenger2anim1", passenger2anim1Img);
+
     this.load.image("conductorAnim0", conductorAnim0Img);
     this.load.image("conductorAnim1", conductorAnim1Img);
+
+    this.load.image("sumoAnim0", sumoAnim0Img);
+    this.load.image("sumoAnim1", sumoAnim1Img);
   }
 
   create() {
@@ -141,6 +198,26 @@ class Boot extends Phaser.Scene {
     });
 
     this.anims.create({
+      key: 'passenger2anim',
+      frames: [
+        { key: 'passenger2anim0' },
+        { key: 'passenger2anim1' },
+      ],
+      frameRate: 8,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'sumoAnim',
+      frames: [
+        { key: 'sumoAnim0' },
+        { key: 'sumoAnim1' },
+      ],
+      frameRate: 8,
+      repeat: -1
+    });
+
+    this.anims.create({
       key: 'conductorAnim',
       frames: [
         { key: 'conductorAnim0' },
@@ -172,6 +249,19 @@ class Boot extends Phaser.Scene {
       }
     );
 
+    if (this.highScore) {
+      this.hsText = this.add.text(
+        16,
+        56,
+        'High score:  ' + this.highScore,
+        {
+          fontSize: '32px',
+          fill: '#fff',
+          fontFamily: 'Pixel miners'
+        }
+      );
+    }
+
     this.comboText = this.add.text(
       this.cameras.main.width - 16,
       16,
@@ -183,6 +273,18 @@ class Boot extends Phaser.Scene {
       }
     );
     this.comboText.setOrigin(1, 0);
+
+    this.hpText = this.add.text(
+      this.cameras.main.width - 16,
+      56,
+      'HP:  ' + this.hp,
+      {
+        fontSize: '32px',
+        fill: '#fff',
+        fontFamily: 'Pixel miners'
+      }
+    );
+    this.hpText.setOrigin(1, 0);
 
     const conductor = this.add.sprite(640, this.cameras.main.height - 50, "conductorAnim0");
     conductor.setOrigin(0, 1);
@@ -199,37 +301,44 @@ class Boot extends Phaser.Scene {
       conductor.x = Math.min(conductor.x + 430, 1070)
     })
 
-    const keyShoot = this.input.keyboard.addKey('Q')
-    keyShoot.on('down', () => {
-      const newPassengerArr = []
-      let hasDeleted = false
-
-      for(let i in this.passengersArr) {
-        const passengerSprite = this.passengersArr[i]
-        if(hasDeleted) {
-          newPassengerArr.push(passengerSprite)
-          continue
-        }
-
-        if(!passengerSprite.body)
-          continue
-
-        if(
-          passengerSprite.body.x >= conductor.x - 150
-          && passengerSprite.body.x <= conductor.x + 150
-          && passengerSprite.body.y <= 310
-        ) {
-            console.log('destroy')
-            passengerSprite.destroy()
-            hasDeleted = true
+    if (flaga) {
+      flaga = false;
+  
+      const keyShoot = this.input.keyboard.addKey('Q')
+      keyShoot.on('down', () => {
+        const newPassengerArr = []
+        let hasDeleted = false
+  
+        for(let i in this.passengersArr) {
+          const passengerSprite = this.passengersArr[i]
+          if(hasDeleted) {
+            newPassengerArr.push(passengerSprite)
             continue
+          }
+  
+          if(!passengerSprite.body)
+            continue
+  
+          if(
+            passengerSprite.body.x >= conductor.x - 150
+            && passengerSprite.body.x <= conductor.x + 150
+            && passengerSprite.body.y <= 310 &&
+            --passengerSprite.hp === 0
+          ) {
+              passengerSprite.destroy()
+              if (this.trainLeft) {
+                this.addToScore(passengerSprite);
+              }
+              hasDeleted = true
+              continue
+          }
+  
+          newPassengerArr.push(passengerSprite)
         }
-
-        newPassengerArr.push(passengerSprite)
-      }
-
-      this.passengersArr = newPassengerArr
-    })
+  
+        this.passengersArr = newPassengerArr
+      })
+    }
 
 
     this.firstTween = this.tweens.add({
@@ -256,7 +365,7 @@ class Boot extends Phaser.Scene {
       if(!passengerSprite.body)
         continue
 
-      if (passengerSprite.body.y < 230 || this.trainLeft) {
+      if (passengerSprite.body.y < 280 || this.trainLeft) {
         passengerSprite.body.velocity.y = 0;
       } else {
         passengerSprite.body.velocity.y = -200;
@@ -269,6 +378,11 @@ class Boot extends Phaser.Scene {
     this.progressBar.fillRect(34, 400 + 280 - 24, 300 * Math.min(1, percentageOfTimeToLeave), 30);
 
     if (percentageOfTimeToLeave > 1 && !this.trainLeft) {
+      if (this.passengersArr.length > 0) {
+        this.hpText.setText(`HP:  ${this.hp--}`);
+        this.combo = 1;
+      }
+
       this.trainLeave();
     }
   }
@@ -278,21 +392,49 @@ class Boot extends Phaser.Scene {
     { rowOnePassengers, rowTwoPassengers, rowThreePassengers }
   ) {
 
-    for(const passengerTime of rowOnePassengers) {
+    for(const passenger of rowOnePassengers) {
+      const passengerTime = typeof passenger === 'number' ? passenger : passenger.time
+      const isSumo = typeof passenger !== 'number'
       setTimeout(() => {
-        const passenger = createPassenger(game, 210 + Math.random() * 100 - 50, 800 + Math.random() * 100, 'passenger1anim0', 'passenger1anim');
+        const passenger = createPassenger(
+          game,
+          210 + Math.random() * 100 - 50,
+          800 + Math.random() * 100,
+          isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
+          isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
+          isSumo ? 20 : 1,
+        );
         this.passengersArr.push(passenger);
       }, passengerTime)
     }
-    for(const passengerTime of rowTwoPassengers) {
+    for(const passenger of rowTwoPassengers) {
+      const passengerTime = typeof passenger === 'number' ? passenger : passenger.time
+      const isSumo = typeof passenger !== 'number'
       setTimeout(() => {
-        const passenger = createPassenger(game, 640 + Math.random() * 100 - 50, 800 + Math.random() * 100, 'passenger1anim0', 'passenger1anim');
+        const passenger = createPassenger(
+          game,
+          640 + Math.random() * 100 - 50,
+          800 + Math.random() * 100,
+          isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
+          isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
+          isSumo ? 20 : 1,
+        );
+
         this.passengersArr.push(passenger);
       }, passengerTime)
     }
-    for(const passengerTime of rowThreePassengers) {
+    for(const passenger of rowThreePassengers) {
+      const passengerTime = typeof passenger === 'number' ? passenger : passenger.time
+      const isSumo = typeof passenger !== 'number'
       setTimeout(() => {
-        const passenger = createPassenger(game, 1070 + Math.random() * 100 - 50, 800 + Math.random() * 100, 'passenger1anim0', 'passenger1anim');
+        const passenger = createPassenger(
+          game,
+          1070 + Math.random() * 100 - 50,
+          800 + Math.random() * 100,
+          isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
+          isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
+          isSumo ? 20 : 1,
+        );
         this.passengersArr.push(passenger);
       }, passengerTime)
     }

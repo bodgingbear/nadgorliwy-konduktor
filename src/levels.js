@@ -57,7 +57,7 @@ export const levels = [
         rowOnePassengers: [
             2800,
             3000,
-            3700,
+            { time: 3700 },
             4100,
         ],
         rowTwoPassengers: [
