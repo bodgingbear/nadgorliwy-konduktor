@@ -96,7 +96,6 @@ class Boot extends Phaser.Scene {
 
   trainLeave() {
     this.trainLeft = true;
-    // this.trainDoor.anims.restart();
     this.trainDoor.anims.playReverse('close-door');
 
     this.tweens.add({
@@ -113,10 +112,12 @@ class Boot extends Phaser.Scene {
       repeat: 0,            // -1: infinity
       yoyo: false,
       onComplete: () => {
-        this.scene.restart();
-        currentLevel++;
-        this.trainLeft = false;
-        this.startTime = new Date();
+        if (this.hp > 0) {
+          this.scene.restart();
+          currentLevel++;
+          this.trainLeft = false;
+          this.startTime = new Date();
+        }
       }
     });
   }
@@ -152,6 +153,8 @@ class Boot extends Phaser.Scene {
   }
 
   create() {
+    this.startTime = new Date();
+
     this.music = this.sound.add('theme', {loop: true, volume: 0.5});
 
     this.music.play();
@@ -290,7 +293,7 @@ class Boot extends Phaser.Scene {
     this.hpText = this.add.text(
       this.cameras.main.width - 16,
       56,
-      'HP:  ' + this.hp,
+      'HP:  ' + Math.max(0, this.hp),
       {
         fontSize: '32px',
         fill: '#fff',
@@ -347,6 +350,13 @@ class Boot extends Phaser.Scene {
             if(this.sumoArr.indexOf(passengerSprite) !== -1) {
               this.sound.play('sumo')
             }
+            // if (!this.trainLeft) {
+              this.addToScore(passengerSprite);
+              this.sound.play('passenger')
+              passengerSprite.rect.clear();
+              passengerSprite.destroy()
+              hasDeleted = true
+            // }
 
             if(--passengerSprite.hp === 0) {
               // if (!this.trainLeft) {
@@ -405,7 +415,7 @@ class Boot extends Phaser.Scene {
     const percentageOfTimeToLeave = timeElapsed / (levels[currentLevel].timeToLeave * 1000);
     this.progressBar.fillRect(34, 400 + 280 - 24, 300 * Math.min(1, percentageOfTimeToLeave), 30);
 
-    this.sumoArr.forEach(p => {
+    this.passengersArr.forEach(p => {
       if (!p.body) {
         p.rect.clear();
         return;
@@ -417,15 +427,32 @@ class Boot extends Phaser.Scene {
 
       p.rect.clear();
 
-      p.rect.fillStyle(0xff0000, 1);
-      const hpp = p.hp / 10;
-      p.rect.fillRect(p.body.x, p.body.y - p.body.height / 2, 100 * hpp, 10);
+      if (p.initialHp < 4) {
+        p.rect.fillStyle(0x4298F1, 1);
+      } else {
+        p.rect.fillStyle(0xff0000, 1);
+      }
+
+      const hpp = p.hp / p.initialHp;
+      let w = 100;
+
+      if (p.initialHp < 4) {
+        w = 75
+      }
+      p.rect.fillRect(p.body.x + 5, p.body.y - p.body.height / 2, w * hpp - p.body.width, 10);
     });
 
     if (percentageOfTimeToLeave > 1 && !this.trainLeft) {
       if (this.passengersArr.length > 0) {
-        this.hpText.setText(`HP:  ${this.hp--}`);
+        this.hp -= this.passengersArr.length
+        console.log(this.hp);
+        this.hpText.setText(`HP:  ${Math.max(0, +this.hp)}`);
         this.combo = 1;
+
+        if (this.hp <= 0) {
+          document.querySelector("#o").classList.add('v');
+          document.querySelector("#score").innerText = this.score;
+        }
       }
 
       this.trainLeave();
@@ -446,7 +473,7 @@ class Boot extends Phaser.Scene {
           800 + Math.random() * 100,
           isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
           isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
-          isSumo ? 10 : 1,
+          isSumo ? 10 : 2,
         );
         this.passengersArr.push(passenger);
 
@@ -466,7 +493,7 @@ class Boot extends Phaser.Scene {
           800 + Math.random() * 100,
           isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
           isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
-          isSumo ? 10 : 1,
+          isSumo ? 10 : 2,
         );
 
         this.passengersArr.push(passenger);
@@ -486,7 +513,7 @@ class Boot extends Phaser.Scene {
           800 + Math.random() * 100,
           isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
           isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
-          isSumo ? 10 : 1,
+          isSumo ? 10 : 2,
         );
         this.passengersArr.push(passenger);
         if (isSumo) {
