@@ -27,7 +27,7 @@ export const levels = [
             1000,
             1800
         ],
-        timeToLeave: 10
+        timeToLeave: 9
     },
     {
         '#': 3,
@@ -50,7 +50,7 @@ export const levels = [
             2900,
             3600
         ],
-        timeToLeave: 10
+        timeToLeave: 9
     },
     {
         '#': 4,

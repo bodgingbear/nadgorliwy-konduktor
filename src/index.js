@@ -319,6 +319,7 @@ class Boot extends Phaser.Scene {
 
       const keyShoot = this.input.keyboard.addKey('Q')
       keyShoot.on('down', () => {
+        console.log(1)
         const newPassengerArr = []
         let hasDeleted = false
 
@@ -332,24 +333,30 @@ class Boot extends Phaser.Scene {
           if(!passengerSprite.body)
             continue
 
+            if(passengerSprite.body.y <= 310) {
+              console.log(passengerSprite.body.x, conductor.x)
+            }
+
           if(
             passengerSprite.x >= conductor.x - 50
             && passengerSprite.x <= conductor.x + 50
             && passengerSprite.y <= 390 &&
             --passengerSprite.hp === 0
           ) {
-            if(passengerSprite.JESTSUMO) {
+            // if (!this.trainLeft) {
+            if(passengerSprite.isSumo) {
               this.sound.play('sumo')
             } else {
+
               this.sound.play('passenger')
             }
 
               passengerSprite.destroy()
-              if (this.trainLeft) {
-                this.addToScore(passengerSprite);
-              }
+              this.addToScore(passengerSprite);
               hasDeleted = true
-              continue
+            // }
+
+            continue
           }
 
           newPassengerArr.push(passengerSprite)
@@ -421,7 +428,7 @@ class Boot extends Phaser.Scene {
           800 + Math.random() * 100,
           isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
           isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
-          isSumo ? 20 : 1,
+          isSumo ? 10 : 1,
         );
         this.passengersArr.push(passenger);
       }, passengerTime)
@@ -436,7 +443,7 @@ class Boot extends Phaser.Scene {
           800 + Math.random() * 100,
           isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
           isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
-          isSumo ? 20 : 1,
+          isSumo ? 10 : 1,
         );
 
         this.passengersArr.push(passenger);
@@ -452,7 +459,7 @@ class Boot extends Phaser.Scene {
           800 + Math.random() * 100,
           isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
           isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
-          isSumo ? 20 : 1,
+          isSumo ? 10 : 1,
         );
         this.passengersArr.push(passenger);
       }, passengerTime)
