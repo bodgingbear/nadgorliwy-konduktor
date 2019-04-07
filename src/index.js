@@ -13,6 +13,9 @@ import trainDoorAnim5Img from "./assets/pixil-metro5.png";
 import passenger1anim0Img from "./assets/pixil-layer-P1-0.png";
 import passenger1anim1Img from "./assets/pixil-layer-P1-1.png";
 
+import conductorAnim0Img from "./assets/pixil-layer-Conductor-0.png";
+import conductorAnim1Img from "./assets/pixil-layer-Conductor-1.png";
+
 import { createPassenger } from './Passenger';
 
 import { levels } from './levels'
@@ -22,6 +25,17 @@ class Boot extends Phaser.Scene {
   constructor(config) {
     super(config);
     this.passengersArr = []
+    this.score = 0;
+    this.combo = 1;
+
+    window.addToScore = this.addToScore.bind(this);
+  }
+
+  addToScore(points = 10) {
+    this.score += points * this.combo++;
+
+    this.scoreText.setText(`Score:  ${this.score}`);
+    this.comboText.setText('Combo  x' + this.combo);
   }
 
   preload() {
@@ -39,6 +53,9 @@ class Boot extends Phaser.Scene {
 
     this.load.image("passenger1anim0", passenger1anim0Img);
     this.load.image("passenger1anim1", passenger1anim1Img);
+
+    this.load.image("conductorAnim0", conductorAnim0Img);
+    this.load.image("conductorAnim1", conductorAnim1Img);
   }
   
   create() {
@@ -78,23 +95,57 @@ class Boot extends Phaser.Scene {
       repeat: -1
     });
   
+    this.anims.create({
+      key: 'conductorAnim',
+      frames: [
+        { key: 'conductorAnim0' },
+        { key: 'conductorAnim1' },
+      ],
+      frameRate: 8,
+      repeat: -1
+    });
+  
     const trainDoor = this.add.sprite(0, 0, "trainDoorAnim0")
     trainDoor.setOrigin(0, 0);
     trainDoor.setScale(5);
     trainDoor.play('door-open');
 
-    const logo = this.add.sprite(640, 300, "passenger1anim");
-    logo.setScale(5);
-    logo.play('passenger1anim');
+    this.scoreText = this.add.text(
+      16,
+      16,
+      'Score:  ' + this.score,
+      {
+        fontSize: '32px',
+        fill: '#fff',
+        fontFamily: 'Pixel miners'
+      }
+    );
+
+    this.comboText = this.add.text(
+      this.cameras.main.width - 16,
+      16,
+      'Combo  x' + this.combo,
+      {
+        fontSize: '32px',
+        fill: '#fff',
+        fontFamily: 'Pixel miners'
+      }
+    );
+    this.comboText.setOrigin(1, 0);
+
+    const conductor = this.add.sprite(640, this.cameras.main.height - 50, "conductorAnim0");
+    conductor.setOrigin(0, 1);
+    conductor.setScale(5);
+    conductor.play('conductorAnim');
 
     const { left: leftArrow, right: rightArrow } = this.input.keyboard.createCursorKeys();
 
     leftArrow.on('down', () => {
-      logo.x = Math.max(logo.x - 430, 210)
+      conductor.x = Math.max(conductor.x - 430, 210)
     })
   
     rightArrow.on('down', () => {
-      logo.x = Math.min(logo.x + 430, 1070)
+      conductor.x = Math.min(conductor.x + 430, 1070)
     })
   
     this.setupLevel(this, levels[0], this.passengersArr)
@@ -102,7 +153,11 @@ class Boot extends Phaser.Scene {
   
   update() {
     for(const passengerSprite of this.passengersArr) {
-      passengerSprite.body.velocity.y = -100
+      if (passengerSprite.body.y < 230) {
+        passengerSprite.body.velocity.y = 0;
+      } else {
+        passengerSprite.body.velocity.y = -100;
+      }
     }
   }
   
@@ -113,19 +168,19 @@ class Boot extends Phaser.Scene {
   
     for(const passengerTime of rowOnePassengers) {
       setTimeout(() => {
-        const passenger = createPassenger(game, 210, 500 + Math.random() * 100, 'passenger1anim0', 'passenger1anim');
+        const passenger = createPassenger(game, 210 + Math.random() * 100 - 50, 800 + Math.random() * 100, 'passenger1anim0', 'passenger1anim');
         this.passengersArr.push(passenger);
       }, passengerTime)
     }
     for(const passengerTime of rowTwoPassengers) {
       setTimeout(() => {
-        const passenger = createPassenger(game, 640, 500 + Math.random() * 100, 'passenger1anim0', 'passenger1anim');
+        const passenger = createPassenger(game, 640 + Math.random() * 100 - 50, 800 + Math.random() * 100, 'passenger1anim0', 'passenger1anim');
         this.passengersArr.push(passenger);
       }, passengerTime)
     }
     for(const passengerTime of rowThreePassengers) {
       setTimeout(() => {
-        const passenger = createPassenger(game, 1070, 500 + Math.random() * 100, 'passenger1anim0', 'passenger1anim');
+        const passenger = createPassenger(game, 1070 + Math.random() * 100 - 50, 800 + Math.random() * 100, 'passenger1anim0', 'passenger1anim');
         this.passengersArr.push(passenger);
       }, passengerTime)
     }
