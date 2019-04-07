@@ -76,5 +76,33 @@ export const levels = [
             4800
         ],
         timeToLeave: 10
+    },
+    {
+        '#': 5,
+        rowOnePassengers: [
+            800,
+            3000,
+            { time: 3700 },
+            4100,
+            6500,
+            6900,
+            7500
+        ],
+        rowTwoPassengers: [
+            300,
+            { time: 1700 },
+            2500,
+            3500,
+            3700,
+            5900
+        ],
+        rowThreePassengers: [
+            600,
+            1700,
+            3500,
+            4800,
+            6400
+        ],
+        timeToLeave: 10
     }
 ]
