@@ -44,17 +44,17 @@ class Boot extends Phaser.Scene {
     this.trainLeft = true;
     this.trainDoor.anims.restart();
 
-    this.tweens.add({
+    const tween = this.tweens.add({
       targets: [
         this.trainInterior,
         this.trainExterior,
         this.trainDoor
       ],
-      x: '+=100',               // '+=100'
+      x: this.cameras.main.width,               // '+=100'
       y: 0,               // '+=100'
-      ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
-      duration: 100,
-      repeat: 0,
+      ease: 'Cubic',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+      duration: 500,
+      repeat: 0,            // -1: infinity
       yoyo: false
     });
   }
@@ -83,12 +83,12 @@ class Boot extends Phaser.Scene {
     this.background = this.add.sprite(0, 0, "trainBG")
     this.background.setOrigin(0, 0);
     this.background.setScale(5);
-
-    this.trainInterior = this.add.sprite(0, 0, "trainInterior")
+  
+    this.trainInterior = this.add.sprite(-this.cameras.main.width, 0, "trainInterior")
     this.trainInterior.setOrigin(0, 0);
     this.trainInterior.setScale(5);
-
-    this.trainExterior = this.add.sprite(0, 0, "trainExterior")
+  
+    this.trainExterior = this.add.sprite(-this.cameras.main.width, 0, "trainExterior")
     this.trainExterior.setOrigin(0, 0);
     this.trainExterior.setScale(5);
 
@@ -139,11 +139,10 @@ class Boot extends Phaser.Scene {
       frameRate: 8,
       repeat: -1
     });
-
-    this.trainDoor = this.add.sprite(0, 0, "trainDoorAnim0")
+  
+    this.trainDoor = this.add.sprite(-this.cameras.main.width, 0, "trainDoorAnim0")
     this.trainDoor.setOrigin(0, 0);
     this.trainDoor.setScale(5);
-    this.trainDoor.play('door-open');
 
     this.progressBar = this.add.graphics();
     const progressBox = this.add.graphics();
@@ -223,8 +222,23 @@ class Boot extends Phaser.Scene {
     })
 
 
-
-    this.setupLevel(this, levels[3], this.passengersArr)
+    this.firstTween = this.tweens.add({
+      targets: [
+        this.trainInterior,
+        this.trainExterior,
+        this.trainDoor
+      ],
+      x: 0,
+      y: 0,
+      ease: 'Cubic',
+      duration: 1000,
+      // repeat: 0,
+      // yoyo: false,
+      onComplete: () => {
+        this.trainDoor.play('door-open');
+        this.setupLevel(this, levels[3], this.passengersArr)
+      }
+    });
   }
 
   update() {
