@@ -83,15 +83,15 @@ class Boot extends Phaser.Scene {
     this.background = this.add.sprite(0, 0, "trainBG")
     this.background.setOrigin(0, 0);
     this.background.setScale(5);
-  
+
     this.trainInterior = this.add.sprite(0, 0, "trainInterior")
     this.trainInterior.setOrigin(0, 0);
     this.trainInterior.setScale(5);
-  
+
     this.trainExterior = this.add.sprite(0, 0, "trainExterior")
     this.trainExterior.setOrigin(0, 0);
     this.trainExterior.setScale(5);
-  
+
     this.anims.create({
       key: 'door-open',
       frames: [
@@ -119,7 +119,7 @@ class Boot extends Phaser.Scene {
       frameRate: 8,
       repeat: 0
     });
-  
+
     this.anims.create({
       key: 'passenger1anim',
       frames: [
@@ -139,7 +139,7 @@ class Boot extends Phaser.Scene {
       frameRate: 8,
       repeat: -1
     });
-  
+
     this.trainDoor = this.add.sprite(0, 0, "trainDoorAnim0")
     this.trainDoor.setOrigin(0, 0);
     this.trainDoor.setScale(5);
@@ -224,7 +224,7 @@ class Boot extends Phaser.Scene {
 
 
 
-    this.setupLevel(this, levels[0], this.passengersArr)
+    this.setupLevel(this, levels[3], this.passengersArr)
   }
 
   update() {
@@ -241,7 +241,7 @@ class Boot extends Phaser.Scene {
 
     const timeElapsed = new Date() - this.startTime;
     // const percentageOfTimeToLeave = timeElapsed / 2000;
-    const percentageOfTimeToLeave = timeElapsed / 10000;
+    const percentageOfTimeToLeave = timeElapsed / (levels[3].timeToLeave * 1000);
     this.progressBar.fillRect(34, 400 + 280 - 24, 300 * Math.min(1, percentageOfTimeToLeave), 30);
 
     if (percentageOfTimeToLeave > 1) {

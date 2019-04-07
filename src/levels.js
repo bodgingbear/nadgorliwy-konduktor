@@ -2,31 +2,79 @@ export const levels = [
     {
         '#': 1,
         rowOnePassengers: [
-            500,
-            1800
         ],
         rowTwoPassengers: [
-            900,
-            3800
+            3700,
+            4800
         ],
         rowThreePassengers: [
-            5000,
-            6800
+            900,
+            1800
         ],
+        timeToLeave: 10
     },
     {
         '#': 2,
         rowOnePassengers: [
-            5000,
-            6800
+            800,
+            2800
         ],
         rowTwoPassengers: [
-            900,
-            3800
+            1900,
+            2700
         ],
         rowThreePassengers: [
-            500,
+            1000,
             1800
         ],
+        timeToLeave: 10
+    },
+    {
+        '#': 3,
+        rowOnePassengers: [
+            1800,
+            2800,
+            3200
+        ],
+        rowTwoPassengers: [
+            600,
+            1700,
+            3000,
+            3500,
+            3700
+        ],
+        rowThreePassengers: [
+            1000,
+            1800,
+            2200,
+            2900,
+            3600
+        ],
+        timeToLeave: 10
+    },
+    {
+        '#': 4,
+        rowOnePassengers: [
+            2800,
+            3000,
+            3700,
+            4100,
+        ],
+        rowTwoPassengers: [
+            600,
+            1000,
+            1200,
+            3000,
+            3500,
+            3700
+        ],
+        rowThreePassengers: [
+            300,
+            600,
+            1200,
+            3500,
+            4800
+        ],
+        timeToLeave: 10
     }
 ]
