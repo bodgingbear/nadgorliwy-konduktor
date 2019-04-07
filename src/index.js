@@ -43,7 +43,7 @@ class Boot extends Phaser.Scene {
     this.load.image("trainBG", trainBGImg);
     this.load.image("trainInterior", trainInteriorImg);
     this.load.image("trainExterior", trainExteriorImg);
-  
+
     this.load.image("trainDoorAnim0", trainDoorAnim0Img);
     this.load.image("trainDoorAnim1", trainDoorAnim1Img);
     this.load.image("trainDoorAnim2", trainDoorAnim2Img);
@@ -57,20 +57,20 @@ class Boot extends Phaser.Scene {
     this.load.image("conductorAnim0", conductorAnim0Img);
     this.load.image("conductorAnim1", conductorAnim1Img);
   }
-  
+
   create() {
     const background = this.add.sprite(0, 0, "trainBG")
     background.setOrigin(0, 0);
     background.setScale(5);
-  
+
     const trainInterior = this.add.sprite(0, 0, "trainInterior")
     trainInterior.setOrigin(0, 0);
     trainInterior.setScale(5);
-  
+
     const trainExterior = this.add.sprite(0, 0, "trainExterior")
     trainExterior.setOrigin(0, 0);
     trainExterior.setScale(5);
-  
+
     this.anims.create({
       key: 'door-open',
       frames: [
@@ -84,7 +84,7 @@ class Boot extends Phaser.Scene {
       frameRate: 8,
       repeat: 0
     });
-  
+
     this.anims.create({
       key: 'passenger1anim',
       frames: [
@@ -94,7 +94,7 @@ class Boot extends Phaser.Scene {
       frameRate: 8,
       repeat: -1
     });
-  
+
     this.anims.create({
       key: 'conductorAnim',
       frames: [
@@ -104,7 +104,7 @@ class Boot extends Phaser.Scene {
       frameRate: 8,
       repeat: -1
     });
-  
+
     const trainDoor = this.add.sprite(0, 0, "trainDoorAnim0")
     trainDoor.setOrigin(0, 0);
     trainDoor.setScale(5);
@@ -143,16 +143,53 @@ class Boot extends Phaser.Scene {
     leftArrow.on('down', () => {
       conductor.x = Math.max(conductor.x - 430, 210)
     })
-  
+
     rightArrow.on('down', () => {
       conductor.x = Math.min(conductor.x + 430, 1070)
     })
-  
+
+    const keyShoot = this.input.keyboard.addKey('Q')
+    keyShoot.on('down', () => {
+      const newPassengerArr = []
+      let hasDeleted = false
+
+      for(let i in this.passengersArr) {
+        const passengerSprite = this.passengersArr[i]
+        if(hasDeleted) {
+          newPassengerArr.push(passengerSprite)
+          continue
+        }
+
+        if(!passengerSprite.body)
+          continue
+
+        if(
+          passengerSprite.body.x >= conductor.x - 150
+          && passengerSprite.body.x <= conductor.x + 150
+          && passengerSprite.body.y <= 250
+        ) {
+            console.log('destroy')
+            passengerSprite.destroy()
+            hasDeleted = true
+            continue
+        }
+
+        newPassengerArr.push(passengerSprite)
+      }
+
+      this.passengersArr = newPassengerArr
+    })
+
+
+
     this.setupLevel(this, levels[0], this.passengersArr)
   }
-  
+
   update() {
     for(const passengerSprite of this.passengersArr) {
+      if(!passengerSprite.body)
+        continue
+
       if (passengerSprite.body.y < 230) {
         passengerSprite.body.velocity.y = 0;
       } else {
@@ -160,12 +197,12 @@ class Boot extends Phaser.Scene {
       }
     }
   }
-  
+
   setupLevel (
     game,
     { rowOnePassengers, rowTwoPassengers, rowThreePassengers }
   ) {
-  
+
     for(const passengerTime of rowOnePassengers) {
       setTimeout(() => {
         const passenger = createPassenger(game, 210 + Math.random() * 100 - 50, 800 + Math.random() * 100, 'passenger1anim0', 'passenger1anim');
