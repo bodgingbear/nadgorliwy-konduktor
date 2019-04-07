@@ -333,12 +333,17 @@ class Boot extends Phaser.Scene {
             continue
 
           if(
-            passengerSprite.body.x >= conductor.x - 150
-            && passengerSprite.body.x <= conductor.x + 150
-            && passengerSprite.body.y <= 310 &&
+            passengerSprite.x >= conductor.x - 50
+            && passengerSprite.x <= conductor.x + 50
+            && passengerSprite.y <= 390 &&
             --passengerSprite.hp === 0
           ) {
+            if(passengerSprite.JESTSUMO) {
+              this.sound.play('sumo')
+            } else {
               this.sound.play('passenger')
+            }
+
               passengerSprite.destroy()
               if (this.trainLeft) {
                 this.addToScore(passengerSprite);
@@ -379,7 +384,7 @@ class Boot extends Phaser.Scene {
       if(!passengerSprite.body)
         continue
 
-      if (passengerSprite.body.y < 280 || this.trainLeft) {
+      if (passengerSprite.y < 390 || this.trainLeft) {
         passengerSprite.body.velocity.y = 0;
       } else {
         passengerSprite.body.velocity.y = -200;
@@ -412,7 +417,7 @@ class Boot extends Phaser.Scene {
       setTimeout(() => {
         const passenger = createPassenger(
           game,
-          210 + Math.random() * 100 - 50,
+          210 + (50 * (Math.random() > .5 ? -1 : 1)),
           800 + Math.random() * 100,
           isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
           isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
@@ -427,7 +432,7 @@ class Boot extends Phaser.Scene {
       setTimeout(() => {
         const passenger = createPassenger(
           game,
-          640 + Math.random() * 100 - 50,
+          640 + (50 * (Math.random() > .5 ? -1 : 1)),
           800 + Math.random() * 100,
           isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
           isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
@@ -443,7 +448,7 @@ class Boot extends Phaser.Scene {
       setTimeout(() => {
         const passenger = createPassenger(
           game,
-          1070 + Math.random() * 100 - 50,
+          1070 + (50 * (Math.random() > .5 ? -1 : 1)),
           800 + Math.random() * 100,
           isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
           isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
