@@ -22,6 +22,12 @@ import conductorAnim1Img from "./assets/pixil-layer-Conductor-1.png";
 import sumoAnim0Img from "./assets/pixil-layer-Sumo-0.png";
 import sumoAnim1Img from "./assets/pixil-layer-Sumo-1.png";
 
+import passengerSound from "./assets/passenger.wav";
+import gatesSound from "./assets/gates.wav";
+import sumoSound from "./assets/sumo.wav";
+import bijSound from "./assets/bij.mp3";
+import stationSound from "./assets/station.mp3";
+
 import { createPassenger } from './Passenger';
 
 import { levels } from './levels'
@@ -147,11 +153,11 @@ class Boot extends Phaser.Scene {
 
     this.load.image("sumoAnim0", sumoAnim0Img);
     this.load.image("sumoAnim1", sumoAnim1Img);
-    this.load.audio('theme', [ '/Kyoto Train Station Ambience 3D Sounds Japan (Sleep Rest Study Tokyo ASMR).mp3']);
-    this.load.audio('bij', [ '/bij.mp3']);
-    this.load.audio('sumo', ['/Sumo.wav']);
-    this.load.audio('passenger', ['/1.wav']);
-    this.load.audio('gates', ['/2.wav']);
+    this.load.audio('theme', [stationSound]);
+    this.load.audio('bij', [bijSound]);
+    this.load.audio('sumo', [sumoSound]);
+    this.load.audio('passenger', [passengerSound]);
+    this.load.audio('gates', [gatesSound]);
   }
 
   create() {
