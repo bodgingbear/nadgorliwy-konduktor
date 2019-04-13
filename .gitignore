@@ -1,14 +1,12 @@
-# System and IDE files
-Thumbs.db
-.DS_Store
-.idea
-*.suo
-*.sublime-project
-*.sublime-workspace
+#OSX
+#-------------------------------------------------------------------------------
+.DS_STORE
 
-# Vendors
-node_modules/
 
-# Build
-dist/
-/npm-debug.log
+#General
+#-------------------------------------------------------------------------------
+dist
+node_modules
+*.tsx
+yarn.lock
+package-lock.json
