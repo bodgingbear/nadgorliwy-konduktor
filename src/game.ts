@@ -1,5 +1,7 @@
 import 'phaser';
-import MainScene from './scenes/MainScene';
+import GameScene from './scenes/GameScene';
+import BootScene from './scenes/BootScene';
+import HUDScene from './scenes/HUDScene';
 
 import './styles/styles.css';
 
@@ -11,7 +13,7 @@ const config: GameConfig = {
   banner: true,
   width: 1280,
   height: 720,
-  scene: MainScene,
+  scene: [BootScene, GameScene, HUDScene],
   scale: {
     parent: 'game',
     mode: Phaser.Scale.FIT,

@@ -25,7 +25,6 @@ export default class Passenger extends Phaser.GameObjects.Sprite {
     type: playerType,
     row: number,
   ) {
-    /* eslint-disable no-this-before-super */
     const { sprite, animation } = Passenger.getSpriteKey(type);
     super(scene, x, y, sprite);
 
@@ -36,6 +35,44 @@ export default class Passenger extends Phaser.GameObjects.Sprite {
     this.setHp();
 
     this.init();
+  }
+
+  private init(): void {
+    this.scene.add.existing(this);
+    this.setScale(5);
+    this.scene.physics.add.existing(this);
+
+    if (this.animation) {
+      this.play(this.animation);
+    }
+  }
+
+  public showAndOneText(n: number): void {
+    const andOneText = this.scene.add.text(
+      this.x + 50,
+      this.y,
+      `+${n}`,
+      {
+        fontSize: '24px',
+        fill: '#fff',
+        fontFamily: 'Pixel miners',
+      },
+    );
+
+    this.scene.tweens.add({
+      targets: andOneText,
+      x: this.x + 50,
+      y: this.y - 50,
+      alpha: 0,
+      ease: 'Cubic',
+      duration: 1000,
+      delay: 0,
+      repeat: 0,
+      yoyo: false,
+      onComplete: (): void => {
+        andOneText.destroy();
+      },
+    });
   }
 
   private setHp(): void {
@@ -79,15 +116,5 @@ export default class Passenger extends Phaser.GameObjects.Sprite {
     }
 
     throw new Error('No player sprite with specified type exists');
-  }
-
-  private init(): void {
-    this.scene.add.existing(this);
-    this.setScale(5);
-    this.scene.physics.add.existing(this);
-
-    if (this.animation) {
-      this.play(this.animation);
-    }
   }
 }
