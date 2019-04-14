@@ -30,7 +30,8 @@ module.exports = {
         use: {
           loader: "file-loader",
           options: {
-            name: '/static/assets/[name].[contenthash:8].[ext]',
+            name: 'static/assets/[folder]/[name].[contenthash:8].[ext]',
+            publicPath: '/'
           },
         }
       }

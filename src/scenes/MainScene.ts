@@ -1,4 +1,4 @@
-import Passenger from '../objects/Passenger';
+import Passenger, { playerType } from '../objects/Passenger';
 import { levels } from '../config/levels';
 
 import * as passengerSound from '../assets/audio/passenger.wav';
@@ -546,7 +546,6 @@ export default class MainScene extends Phaser.Scene {
       if (percentageOfTimeToLeave > 1 && !this.trainLeft) {
         if (this.passengersArr.length > 0) {
           this.hp -= this.passengersArr.length;
-          console.log(this.hp);
           this.hpText.setText(`HP:  ${Math.max(0, +this.hp)}`);
           this.combo = 1;
 
@@ -567,23 +566,21 @@ export default class MainScene extends Phaser.Scene {
     ): void {
       // eslint-disable-next-line no-restricted-syntax
       for (const passenger of rowOnePassengers) {
-        const passengerTime = typeof passenger === 'number' ? passenger : passenger.time;
-        const isSumo = typeof passenger !== 'number';
+        const passengerTime = passenger.time;
+        const passengerType = passenger.playerType;
+
+        // eslint-disable-next-line no-loop-func
         setTimeout((): void => {
           // eslint-disable-next-line no-shadow
           const passenger = new Passenger(
             game,
             210 + (50 * (Math.random() > 0.5 ? -1 : 1)),
             800 + Math.random() * 100,
-            // eslint-disable-next-line no-nested-ternary
-            isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
-            isSumo ? 10 : 2,
-            // eslint-disable-next-line no-nested-ternary
-            isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
+            passengerType,
           );
           this.passengersArr.push(passenger);
 
-          if (isSumo) {
+          if (passengerType === playerType.Sumo) {
             this.sumoArr.push(passenger);
           }
         }, passengerTime);
@@ -592,24 +589,21 @@ export default class MainScene extends Phaser.Scene {
 
       // eslint-disable-next-line no-restricted-syntax
       for (const passenger of rowTwoPassengers) {
-        const passengerTime = typeof passenger === 'number' ? passenger : passenger.time;
-        const isSumo = typeof passenger !== 'number';
+        const passengerTime = passenger.time;
+        const passengerType = passenger.playerType;
 
+        // eslint-disable-next-line no-loop-func
         setTimeout((): void => {
           // eslint-disable-next-line no-shadow
           const passenger = new Passenger(
             game,
             640 + (50 * (Math.random() > 0.5 ? -1 : 1)),
             800 + Math.random() * 100,
-            // eslint-disable-next-line no-nested-ternary
-            isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
-            isSumo ? 10 : 2,
-            // eslint-disable-next-line no-nested-ternary
-            isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
+            passengerType,
           );
 
           this.passengersArr.push(passenger);
-          if (isSumo) {
+          if (passengerType === playerType.Sumo) {
             this.sumoArr.push(passenger);
           }
         }, passengerTime);
@@ -617,23 +611,20 @@ export default class MainScene extends Phaser.Scene {
 
       // eslint-disable-next-line no-restricted-syntax
       for (const passenger of rowThreePassengers) {
-        const passengerTime = typeof passenger === 'number' ? passenger : passenger.time;
-        const isSumo = typeof passenger !== 'number';
+        const passengerTime = passenger.time;
+        const passengerType = passenger.playerType;
 
+        // eslint-disable-next-line no-loop-func
         setTimeout((): void => {
           // eslint-disable-next-line no-shadow
           const passenger = new Passenger(
             game,
             1070 + (50 * (Math.random() > 0.5 ? -1 : 1)),
             800 + Math.random() * 100,
-            // eslint-disable-next-line no-nested-ternary
-            isSumo ? 'sumoAnim0' : Math.round(Math.random()) ? 'passenger1anim0' : 'passenger2anim0',
-            isSumo ? 10 : 2,
-            // eslint-disable-next-line no-nested-ternary
-            isSumo ? 'sumoAnim' : Math.round(Math.random()) ? 'passenger1anim' : 'passenger2anim',
+            passengerType,
           );
           this.passengersArr.push(passenger);
-          if (isSumo) {
+          if (passengerType === playerType.Sumo) {
             this.sumoArr.push(passenger);
           }
         }, passengerTime);

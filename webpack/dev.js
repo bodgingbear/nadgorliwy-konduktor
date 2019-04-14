@@ -15,7 +15,8 @@ module.exports = merge(base, {
   },
   devServer: {
     hot: true,
-    inline: true
+    inline: true,
+    publicPath: '/'
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
