@@ -1,6 +1,6 @@
 import { playerType } from '../objects/Passenger';
 
-interface Level {
+export interface Level {
   '#': number;
   rowOnePassengers: ({ time: number; playerType: playerType })[];
   rowTwoPassengers: ({ time: number; playerType: playerType })[];

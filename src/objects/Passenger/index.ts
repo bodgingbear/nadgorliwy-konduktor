@@ -10,6 +10,8 @@ export default class Passenger extends Phaser.GameObjects.Sprite {
 
   public initialHp: number;
 
+  public row: number;
+
   public rect: Phaser.GameObjects.Graphics;
 
   public playerType: playerType;
@@ -21,6 +23,7 @@ export default class Passenger extends Phaser.GameObjects.Sprite {
     x: number,
     y: number,
     type: playerType,
+    row: number,
   ) {
     /* eslint-disable no-this-before-super */
     const { sprite, animation } = Passenger.getSpriteKey(type);
@@ -28,6 +31,7 @@ export default class Passenger extends Phaser.GameObjects.Sprite {
 
     this.playerType = type;
     this.animation = animation;
+    this.row = row;
 
     this.setHp();
 

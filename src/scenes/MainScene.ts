@@ -1,5 +1,6 @@
 import Passenger, { playerType } from '../objects/Passenger';
-import { levels } from '../config/levels';
+import Conductor from '../objects/Conductor';
+import { Level, levels } from '../config/levels';
 
 import * as passengerSound from '../assets/audio/passenger.wav';
 import * as gatesSound from '../assets/audio/gates.wav';
@@ -33,11 +34,10 @@ import * as sumoAnim1Img from '../assets/images/pixil-layer-Sumo-1.png';
 let currentLevel = 0;
 let flaga = true;
 let flaga2 = true;
+const flaga3 = true;
 
 export default class MainScene extends Phaser.Scene {
     private passengersArr: Passenger[];
-
-    private sumoArr: Passenger[];
 
     private score: number;
 
@@ -73,13 +73,14 @@ export default class MainScene extends Phaser.Scene {
 
     private bij: Phaser.Sound.BaseSound;
 
+    private conductor: Conductor;
+
     public constructor() {
       super({
         key: 'MainScene',
       });
 
       this.passengersArr = [];
-      this.sumoArr = [];
       this.score = 0;
       this.highScore = Number(localStorage.getItem('hs'));
       this.combo = 1;
@@ -87,6 +88,7 @@ export default class MainScene extends Phaser.Scene {
 
       this.startTime = new Date();
       this.trainLeft = false;
+      this.conductor = new Conductor();
     }
 
     private addToScore(passenger, points = 10): void {
@@ -199,6 +201,7 @@ export default class MainScene extends Phaser.Scene {
 
     protected create(): void {
       this.startTime = new Date();
+      this.conductor.currentRow = 2;
 
       if (flaga2) {
         this.music = this.sound.add('theme', { loop: true, volume: 0.5 });
@@ -419,12 +422,17 @@ export default class MainScene extends Phaser.Scene {
 
       const { left: leftArrow, right: rightArrow } = this.input.keyboard.createCursorKeys();
 
+      leftArrow.off('down');
+      rightArrow.off('down');
+
       leftArrow.on('down', (): void => {
-        conductor.x = Math.max(conductor.x - 430, 210);
+        this.conductor.goLeft();
+        conductor.x = (this.conductor.currentRow - 1) * 430 + 210;
       });
 
       rightArrow.on('down', (): void => {
-        conductor.x = Math.min(conductor.x + 430, 1070);
+        this.conductor.goRight();
+        conductor.x = (this.conductor.currentRow - 1) * 430 + 210;
       });
 
 
@@ -439,6 +447,7 @@ export default class MainScene extends Phaser.Scene {
           // eslint-disable-next-line no-restricted-syntax, guard-for-in
           for (const i in this.passengersArr) {
             const passengerSprite = this.passengersArr[i];
+
             if (hasDeleted) {
               newPassengerArr.push(passengerSprite);
               // eslint-disable-next-line no-continue
@@ -448,18 +457,16 @@ export default class MainScene extends Phaser.Scene {
             // eslint-disable-next-line no-continue
             if (!passengerSprite.body) { continue; }
 
-            if (passengerSprite.body.y <= 310) {
-              console.log(passengerSprite.body.x, conductor.x);
-            }
-
             if (
-              passengerSprite.x >= conductor.x - 50
-            && passengerSprite.x <= conductor.x + 50
+              passengerSprite.row === this.conductor.currentRow
             && passengerSprite.y <= 390
             ) {
-              if (this.sumoArr.indexOf(passengerSprite) !== -1) {
+              console.log(passengerSprite.row, this.conductor.currentRow);
+
+              if (passengerSprite.playerType === playerType.Sumo) {
                 this.sound.play('sumo');
               }
+
               passengerSprite.hp -= 1;
               if (passengerSprite.hp === 0) {
                 this.addToScore(passengerSprite);
@@ -561,8 +568,8 @@ export default class MainScene extends Phaser.Scene {
     }
 
     private setupLevel(
-      game,
-      { rowOnePassengers, rowTwoPassengers, rowThreePassengers },
+      game: Phaser.Scene,
+      { rowOnePassengers, rowTwoPassengers, rowThreePassengers }: Level,
     ): void {
       // eslint-disable-next-line no-restricted-syntax
       for (const passenger of rowOnePassengers) {
@@ -577,12 +584,9 @@ export default class MainScene extends Phaser.Scene {
             210 + (50 * (Math.random() > 0.5 ? -1 : 1)),
             800 + Math.random() * 100,
             passengerType,
+            1,
           );
           this.passengersArr.push(passenger);
-
-          if (passengerType === playerType.Sumo) {
-            this.sumoArr.push(passenger);
-          }
         }, passengerTime);
       }
 
@@ -600,12 +604,10 @@ export default class MainScene extends Phaser.Scene {
             640 + (50 * (Math.random() > 0.5 ? -1 : 1)),
             800 + Math.random() * 100,
             passengerType,
+            2,
           );
 
           this.passengersArr.push(passenger);
-          if (passengerType === playerType.Sumo) {
-            this.sumoArr.push(passenger);
-          }
         }, passengerTime);
       }
 
@@ -622,11 +624,9 @@ export default class MainScene extends Phaser.Scene {
             1070 + (50 * (Math.random() > 0.5 ? -1 : 1)),
             800 + Math.random() * 100,
             passengerType,
+            3,
           );
           this.passengersArr.push(passenger);
-          if (passengerType === playerType.Sumo) {
-            this.sumoArr.push(passenger);
-          }
         }, passengerTime);
       }
     }
