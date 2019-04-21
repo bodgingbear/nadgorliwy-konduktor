@@ -1,1 +1,1 @@
-# [https://konduktor.bodgebear.dev/](https://konduktor.bodgebear.dev/)
+# [https://konduktor.bodgingbear.dev](https://konduktor.bodgingbear.dev)
