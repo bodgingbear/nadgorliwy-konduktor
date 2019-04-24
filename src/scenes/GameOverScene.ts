@@ -79,6 +79,8 @@ export default class GameOverScene extends Phaser.Scene {
       this.scene.stop('HUDScene');
       this.scene.stop('GameScene');
 
+      this.game.canvas.style.cursor = 'default';
+
       this.scene.start('GameScene');
       this.scene.launch('MainMenuScene');
       this.scene.bringToTop('MainMenuScene');
