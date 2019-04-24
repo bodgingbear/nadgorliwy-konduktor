@@ -7,6 +7,8 @@ export default class HUDScene extends Phaser.Scene {
 
   private hpText: Phaser.GameObjects.Text;
 
+  private levelText: Phaser.GameObjects.Text;
+
   private comboText: Phaser.GameObjects.Text;
 
   private progressBar: Phaser.GameObjects.Graphics;
@@ -35,6 +37,10 @@ export default class HUDScene extends Phaser.Scene {
 
   private getCombo(): number {
     return this.gdm.combo;
+  }
+
+  private getCurrentLevel(): number {
+    return this.gdm.currentLevel;
   }
 
   public create(): void {
@@ -72,6 +78,18 @@ export default class HUDScene extends Phaser.Scene {
     );
     this.hpText.setOrigin(1, 0);
 
+    this.levelText = this.add.text(
+      this.cameras.main.width - 16,
+      96,
+      `HP:  ${Math.max(0, this.getHp())}`,
+      {
+        fontSize: '32px',
+        fill: '#fff',
+        fontFamily: 'Pixel miners',
+      },
+    );
+    this.levelText.setOrigin(1, 0);
+
     this.comboText = this.add.text(
       this.cameras.main.width - 16,
       16,
@@ -99,6 +117,7 @@ export default class HUDScene extends Phaser.Scene {
     this.hsText.setText(`High score:  ${this.getHighScore()}`);
     this.hpText.setText(`HP:  ${Math.max(0, this.getHp())}`);
     this.comboText.setText(`Combo  x${this.getCombo()}`);
+    this.levelText.setText(`Level  ${this.getCurrentLevel()}`);
 
     const percentageOfTimeToLeave = this.gdm.getPercentageOfTimeElapsed();
 
