@@ -78,17 +78,17 @@ export default class HUDScene extends Phaser.Scene {
     );
     this.hpText.setOrigin(1, 0);
 
-    this.levelText = this.add.text(
-      this.cameras.main.width - 16,
-      96,
-      `HP:  ${Math.max(0, this.getHp())}`,
-      {
-        fontSize: '32px',
-        fill: '#fff',
-        fontFamily: 'Pixel miners',
-      },
-    );
-    this.levelText.setOrigin(1, 0);
+    // this.levelText = this.add.text(
+    //   this.cameras.main.width - 16,
+    //   96,
+    //   `HP:  ${Math.max(0, this.getHp())}`,
+    //   {
+    //     fontSize: '32px',
+    //     fill: '#fff',
+    //     fontFamily: 'Pixel miners',
+    //   },
+    // );
+    // this.levelText.setOrigin(1, 0);
 
     this.comboText = this.add.text(
       this.cameras.main.width - 16,
@@ -117,7 +117,7 @@ export default class HUDScene extends Phaser.Scene {
     this.hsText.setText(`High score:  ${this.getHighScore()}`);
     this.hpText.setText(`HP:  ${Math.max(0, this.getHp())}`);
     this.comboText.setText(`Combo  x${this.getCombo()}`);
-    this.levelText.setText(`Level  ${this.getCurrentLevel()}`);
+    // this.levelText.setText(`Level  ${this.getCurrentLevel()}`);
 
     const percentageOfTimeToLeave = this.gdm.getPercentageOfTimeElapsed();
 
@@ -126,9 +126,8 @@ export default class HUDScene extends Phaser.Scene {
     this.progressBar.fillRect(34, 400 + 280 - 24, 300 * Math.min(1, percentageOfTimeToLeave), 30);
 
     if (this.getHp() <= 0) {
-      document.querySelector('#o').classList.add('v');
-      const $score: HTMLElement = document.querySelector('#score') as HTMLElement;
-      $score.innerText = String(this.gdm.score);
+      this.scene.launch('GameOverScene');
+      this.scene.bringToTop('GameOverScene');
     }
   }
 }

@@ -13,12 +13,15 @@ export default class GameDataManager {
 
   public startTime: number;
 
+  public isGameRunning: boolean;
+
   public constructor() {
     this.currentLevel = 0;
     this.score = 0;
     this.combo = 1;
     this.hp = 3;
     this.highScore = Number(localStorage.getItem('hs'));
+    this.isGameRunning = false;
   }
 
   public nextLevel(): void {
@@ -70,5 +73,9 @@ export default class GameDataManager {
     const percentageOfTimeToLeave = pottlNumerator / pottlDenominator;
 
     return percentageOfTimeToLeave;
+  }
+
+  public startPlaying(): void {
+    this.isGameRunning = true;
   }
 }

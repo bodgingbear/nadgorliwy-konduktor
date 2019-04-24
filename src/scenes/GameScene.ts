@@ -22,8 +22,6 @@ export default class GameScene extends Phaser.Scene {
 
     private conductor: Conductor;
 
-    private isGameRunning: boolean;
-
     private get gdm(): GameDataManager {
       return this.registry.get('gdm');
     }
@@ -36,8 +34,6 @@ export default class GameScene extends Phaser.Scene {
       this.passengersArr = [];
 
       this.trainLeft = false;
-
-      this.isGameRunning = false;
     }
 
     private addToScore(passenger: Passenger, points = 10): void {
@@ -74,10 +70,11 @@ export default class GameScene extends Phaser.Scene {
     }
 
     private startGame(): void {
-      this.isGameRunning = true;
+      this.gdm.startPlaying();
       this.trainLeft = false;
       this.gdm.setStartTime(Date.now());
 
+      this.scene.stop('MainMenuScene');
       this.scene.launch('HUDScene');
       this.scene.bringToTop('HUDScene');
 
@@ -85,18 +82,15 @@ export default class GameScene extends Phaser.Scene {
 
       const { left: leftArrow, right: rightArrow } = this.input.keyboard.createCursorKeys();
 
-      leftArrow.off('down');
       leftArrow.on('down', (): void => {
         this.conductor.goLeft();
       });
 
-      rightArrow.off('down');
       rightArrow.on('down', (): void => {
         this.conductor.goRight();
       });
 
       const keyShoot = this.input.keyboard.addKey('Q');
-      keyShoot.off('down');
       keyShoot.on('down', (): void => {
         const newPassengerArr = [];
         let hasDeleted = false;
@@ -157,6 +151,12 @@ export default class GameScene extends Phaser.Scene {
           this.setupLevel(this, levels[this.gdm.currentLevel]);
         },
       });
+
+      this.events.on('shutdown', (): void => {
+        leftArrow.off('down');
+        rightArrow.off('down');
+        keyShoot.off('down');
+      });
     }
 
     protected create(): void {
@@ -192,7 +192,7 @@ export default class GameScene extends Phaser.Scene {
 
       this.conductor = new Conductor(this, 640, this.cameras.main.height - 50);
 
-      if (this.isGameRunning) {
+      if (this.gdm.isGameRunning) {
         this.startGame();
       } else {
         this.input.keyboard.on('keydown', (): void => {
@@ -316,7 +316,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     public update(): void {
-      if (this.isGameRunning) {
+      if (this.gdm.isGameRunning) {
         this.updateGameRunning();
       }
     }

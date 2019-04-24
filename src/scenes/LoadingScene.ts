@@ -175,6 +175,8 @@ export default class BootScene extends Phaser.Scene {
     this.introImage.anims.playReverse('intro');
     this.introImage.on('animationcomplete', (): void => {
       this.scene.start('GameScene');
+      this.scene.start('MainMenuScene');
+      this.scene.bringToTop('MainMenuScene');
     }, this);
   }
 
