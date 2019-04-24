@@ -42,7 +42,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
     const { highScore } = this.registry.get('gdm') as GameDataManager;
 
-    this.pressAnyKeyText = this.add.text(
+    const hsText = this.add.text(
       this.cameras.main.centerX,
       250,
       `High score: ${highScore}`,
@@ -54,6 +54,29 @@ export default class MainMenuScene extends Phaser.Scene {
         lineSpacing: 10,
       },
     );
-    this.pressAnyKeyText.setOrigin(0.5, 0.5);
+    hsText.setOrigin(0.5, 0.5);
+
+    const duration = 500;
+    const angle = 2;
+
+    this.tweens.timeline({
+      targets: this.pressAnyKeyText,
+      // targets: this.titleText,
+      loop: -1,
+      yoyo: true,
+
+      tweens: [
+        {
+          angle,
+          ease: 'Sine',
+          duration,
+        },
+        {
+            angle: -1 * angle,
+            ease: 'Sine',
+            duration,
+        },
+      ],
+    });
   }
 }
