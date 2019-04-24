@@ -263,13 +263,11 @@ export default class GameScene extends Phaser.Scene {
           p.rect.fillStyle(0xff0000, 1);
         }
 
-        const hpp = p.hp / p.initialHp;
-        let w = 100;
-
-        if (p.initialHp < 4) {
-          w = 75;
-        }
-        p.rect.fillRect(p.body.x + 5, p.body.y - p.body.height / 2, w * hpp - p.body.width, 10);
+        const fullBarWidth = p.playerType === playerType.Sumo ? 100 : 75;
+        const actualBarWidth = fullBarWidth * p.hp / p.initialHp;
+        const barHeight = 10
+        const {centerX, top} = p.getBounds()
+        p.rect.fillRect(centerX - fullBarWidth / 2, top - barHeight * 2, actualBarWidth, barHeight);
       });
 
       const percentageOfTimeToLeave = this.gdm.getPercentageOfTimeElapsed();
