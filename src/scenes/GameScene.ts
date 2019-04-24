@@ -2,7 +2,6 @@ import Passenger, { playerType } from '../objects/Passenger';
 import Conductor from '../objects/Conductor';
 import GameDataManager from '../objects/GameDataManager';
 import { Level, levels } from '../config/levels';
-import { createAnimation } from '../utils/createAnimation';
 
 export default class GameScene extends Phaser.Scene {
     private passengersArr: Passenger[];
@@ -23,6 +22,8 @@ export default class GameScene extends Phaser.Scene {
 
     private conductor: Conductor;
 
+    private isGameRunning: boolean;
+
     private get gdm(): GameDataManager {
       return this.registry.get('gdm');
     }
@@ -35,6 +36,8 @@ export default class GameScene extends Phaser.Scene {
       this.passengersArr = [];
 
       this.trainLeft = false;
+
+      this.isGameRunning = false;
     }
 
     private addToScore(passenger: Passenger, points = 10): void {
@@ -70,91 +73,15 @@ export default class GameScene extends Phaser.Scene {
       });
     }
 
-    protected create(): void {
+    private startGame(): void {
+      this.isGameRunning = true;
       this.trainLeft = false;
       this.gdm.setStartTime(Date.now());
 
-      if (!this.music || !this.music.isPlaying) {
-        this.music = this.sound.add('theme', { loop: true, volume: 0.5 });
-        this.music.play();
-      }
+      this.scene.launch('HUDScene');
+      this.scene.bringToTop('HUDScene');
 
-      if (!this.bij || !this.bij.isPlaying) {
-        this.bij = this.sound.add('bij', { loop: true, volume: 0.15 });
-
-        this.bij.play();
-      }
-
-      this.sound.add('sumo');
-      this.sound.add('gates');
-
-      this.background = this.add.sprite(0, 0, 'trainBG');
-      this.background.setOrigin(0, 0);
-      this.background.setScale(5);
-
-      this.trainInterior = this.add.sprite(-this.cameras.main.width, 0, 'trainInterior');
-      this.trainInterior.setOrigin(0, 0);
-      this.trainInterior.setScale(5);
-
-      this.trainExterior = this.add.sprite(-this.cameras.main.width, 0, 'trainExterior');
-      this.trainExterior.setOrigin(0, 0);
-      this.trainExterior.setScale(5);
-
-      this.anims.create(createAnimation(
-        'door-open',
-        6,
-        'trainDoorAnim',
-        {
-          frameRate: 30,
-          repeat: 0,
-        },
-      ));
-
-      this.anims.create(createAnimation(
-        'passenger1anim',
-        2,
-        'passenger1anim',
-        {
-          frameRate: 8,
-        repeat: -1,
-        },
-      ));
-
-      this.anims.create(createAnimation(
-        'passenger2anim',
-        2,
-        'passenger2anim',
-        {
-          frameRate: 8,
-        repeat: -1,
-        },
-      ));
-
-      this.anims.create(createAnimation(
-        'sumoAnim',
-        2,
-        'sumoAnim',
-        {
-          frameRate: 8,
-        repeat: -1,
-        },
-      ));
-
-      this.anims.create(createAnimation(
-        'conductorAnim',
-        2,
-        'conductorAnim',
-        {
-          frameRate: 8,
-          repeat: -1,
-        },
-      ));
-
-      this.trainDoor = this.add.sprite(-this.cameras.main.width, 0, 'trainDoorAnim0');
-      this.trainDoor.setOrigin(0, 0);
-      this.trainDoor.setScale(5);
-
-      this.conductor = new Conductor(this, 640, this.cameras.main.height - 50);
+      this.input.keyboard.off('keydown');
 
       const { left: leftArrow, right: rightArrow } = this.input.keyboard.createCursorKeys();
 
@@ -232,7 +159,49 @@ export default class GameScene extends Phaser.Scene {
       });
     }
 
-    public update(): void {
+    protected create(): void {
+      if (!this.music || !this.music.isPlaying) {
+        this.music = this.sound.add('theme', { loop: true, volume: 0.5 });
+        this.music.play();
+      }
+
+      if (!this.bij || !this.bij.isPlaying) {
+        this.bij = this.sound.add('bij', { loop: true, volume: 0.15 });
+
+        this.bij.play();
+      }
+
+      this.sound.add('sumo');
+      this.sound.add('gates');
+
+      this.background = this.add.sprite(0, 0, 'trainBG');
+      this.background.setOrigin(0, 0);
+      this.background.setScale(5);
+
+      this.trainInterior = this.add.sprite(-this.cameras.main.width, 0, 'trainInterior');
+      this.trainInterior.setOrigin(0, 0);
+      this.trainInterior.setScale(5);
+
+      this.trainExterior = this.add.sprite(-this.cameras.main.width, 0, 'trainExterior');
+      this.trainExterior.setOrigin(0, 0);
+      this.trainExterior.setScale(5);
+
+      this.trainDoor = this.add.sprite(-this.cameras.main.width, 0, 'trainDoorAnim0');
+      this.trainDoor.setOrigin(0, 0);
+      this.trainDoor.setScale(5);
+
+      this.conductor = new Conductor(this, 640, this.cameras.main.height - 50);
+
+      if (this.isGameRunning) {
+        this.startGame();
+      } else {
+        this.input.keyboard.on('keydown', (): void => {
+          this.startGame();
+        });
+      }
+    }
+
+    private updateGameRunning(): void {
       // eslint-disable-next-line no-restricted-syntax
       for (const passengerSprite of this.passengersArr) {
         // eslint-disable-next-line no-continue
@@ -343,6 +312,12 @@ export default class GameScene extends Phaser.Scene {
           );
           this.passengersArr.push(passenger);
         }, [], this);
+      }
+    }
+
+    public update(): void {
+      if (this.isGameRunning) {
+        this.updateGameRunning();
       }
     }
 }
