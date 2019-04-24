@@ -188,7 +188,8 @@ export default class GameScene extends Phaser.Scene {
           if (!passengerSprite.body) { continue; }
 
           if (
-            this.conductor.areOnTheSameRow(passengerSprite)
+            !this.trainLeft
+            && this.conductor.areOnTheSameRow(passengerSprite)
             && passengerSprite.y <= 390
           ) {
             if (passengerSprite.playerType === playerType.Sumo) {
@@ -265,8 +266,8 @@ export default class GameScene extends Phaser.Scene {
 
         const fullBarWidth = p.playerType === playerType.Sumo ? 100 : 75;
         const actualBarWidth = fullBarWidth * p.hp / p.initialHp;
-        const barHeight = 10
-        const {centerX, top} = p.getBounds()
+        const barHeight = 10;
+        const { centerX, top } = p.getBounds();
         p.rect.fillRect(centerX - fullBarWidth / 2, top - barHeight * 2, actualBarWidth, barHeight);
       });
 
