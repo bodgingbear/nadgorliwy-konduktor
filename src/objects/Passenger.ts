@@ -1,8 +1,8 @@
 export enum playerType {
-  Man,
-  Man1,
-  Man2,
-  Sumo
+  Man = 'Man',
+  Man1 = 'Man1',
+  Man2 = 'Man2',
+  Sumo = 'Sumo'
 }
 
 export default class Passenger extends Phaser.GameObjects.Sprite {
