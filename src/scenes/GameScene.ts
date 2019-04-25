@@ -83,11 +83,13 @@ export default class GameScene extends Phaser.Scene {
       const { left: leftArrow, right: rightArrow } = this.input.keyboard.createCursorKeys();
 
       leftArrow.on('down', (): void => {
-        this.conductor.goLeft();
+        const newRow = this.conductor.goLeft();
+        this.gdm.setConductorRow(newRow)
       });
 
       rightArrow.on('down', (): void => {
-        this.conductor.goRight();
+        const newRow = this.conductor.goRight();
+        this.gdm.setConductorRow(newRow)
       });
 
       const keyShoot = this.input.keyboard.addKey('Q');
@@ -190,8 +192,7 @@ export default class GameScene extends Phaser.Scene {
       this.trainDoor.setOrigin(0, 0);
       this.trainDoor.setScale(5);
 
-      this.conductor = new Conductor(this, 640, this.cameras.main.height - 50);
-
+      this.conductor = new Conductor(this, this.gdm.conductorRow, this.cameras.main.height - 50);
       if (this.gdm.isGameRunning) {
         this.startGame();
       } else {

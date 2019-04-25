@@ -15,6 +15,8 @@ export default class GameDataManager {
 
   public isGameRunning: boolean;
 
+  public conductorRow: number;
+
   public constructor() {
     this.currentLevel = 0;
     this.score = 0;
@@ -22,6 +24,7 @@ export default class GameDataManager {
     this.hp = 3;
     this.highScore = Number(localStorage.getItem('hs'));
     this.isGameRunning = false;
+    this.conductorRow = 2;
   }
 
   public nextLevel(): void {
@@ -77,5 +80,9 @@ export default class GameDataManager {
 
   public startPlaying(): void {
     this.isGameRunning = true;
+  }
+
+  public setConductorRow(newRow: number): void {
+    this.conductorRow = newRow
   }
 }

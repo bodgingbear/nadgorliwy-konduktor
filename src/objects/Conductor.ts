@@ -5,11 +5,12 @@ export default class Conductor extends Phaser.GameObjects.Sprite {
 
   public constructor(
     scene: Phaser.Scene,
-    x: number,
+    initialRow: number,
     y: number,
   ) {
+    const x = (initialRow - 1) * 430 + 210;
     super(scene, x, y, 'conductorAnim0');
-    this.currentRow = 2;
+    this.currentRow = initialRow;
 
     this.setOrigin(0, 1);
     this.setScale(5);
@@ -18,16 +19,20 @@ export default class Conductor extends Phaser.GameObjects.Sprite {
     this.play('conductorAnim');
   }
 
-  public goLeft(): void {
+  public goLeft(): number {
     this.currentRow = Math.max(this.currentRow - 1, 1);
 
     this.x = (this.currentRow - 1) * 430 + 210;
+
+    return this.currentRow;
   }
 
-  public goRight(): void {
+  public goRight(): number {
     this.currentRow = Math.min(this.currentRow + 1, 3);
 
     this.x = (this.currentRow - 1) * 430 + 210;
+
+    return this.currentRow;
   }
 
 
