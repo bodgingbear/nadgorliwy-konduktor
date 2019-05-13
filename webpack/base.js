@@ -6,6 +6,7 @@ const template = path.join(__dirname, '../index.html');
 const package = require('../package.json');
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
 module.exports = {
   devtool: "eval-source-map",
@@ -47,6 +48,22 @@ module.exports = {
       template,
       inject: 'head',
       title: package.title
+    }),
+    new FaviconsWebpackPlugin({
+      logo: './src/assets/images/favicon.png',
+      pixel_art: true,
+      icons: {
+        android: false,
+        appleIcon: false,
+        appleStartup: false,
+        coast: false,
+        favicons: true,
+        firefox: false,
+        opengraph: false,
+        twitter: false,
+        yandex: false,
+        windows: false
+      }
     })
   ],
   resolve: {
