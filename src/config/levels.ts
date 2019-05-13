@@ -1,10 +1,15 @@
 import { playerType } from '../objects/Passenger';
 
+export interface Row {
+  time: number;
+  playerType: playerType;
+}
+
 export interface Level {
   '#': number;
-  rowOnePassengers: ({ time: number; playerType: playerType })[];
-  rowTwoPassengers: ({ time: number; playerType: playerType })[];
-  rowThreePassengers: ({ time: number; playerType: playerType })[];
+  rowOnePassengers: Row[];
+  rowTwoPassengers: Row[];
+  rowThreePassengers: Row[];
   timeToLeave: number;
 }
 
