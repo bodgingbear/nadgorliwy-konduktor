@@ -40,7 +40,8 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       GAME_VERSION: JSON.stringify(package.version),
-      GAME_TITLE: JSON.stringify(package.title)
+      GAME_TITLE: JSON.stringify(package.title),
+      SKIP_INTRO: process.env.SKIP_INTRO,
     }),
     new HtmlWebpackPlugin({
       template,

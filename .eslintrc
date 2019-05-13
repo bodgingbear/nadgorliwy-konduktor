@@ -8,7 +8,8 @@
   "globals": {
     "Phaser": true,
     "GAME_TITLE": true,
-    "GAME_VERSION": true
+    "GAME_VERSION": true,
+    "SKIP_INTRO": true
   },
   "env": {
     "browser": true,

@@ -83,7 +83,9 @@ export default class BootScene extends Phaser.Scene {
   }
 
   public preload(): void {
-    this.showLoadingAnimation();
+    if (!SKIP_INTRO) {
+      this.showLoadingAnimation();
+    }
 
     this.load.image('trainBG', trainBGImg);
     this.load.image('trainInterior', trainInteriorImg);
@@ -169,18 +171,25 @@ export default class BootScene extends Phaser.Scene {
     ));
   }
 
+  private changeScene(): void {
+    this.scene.start('GameScene');
+    this.scene.start('MainMenuScene');
+    this.scene.bringToTop('MainMenuScene');
+  }
+
   private playEndingAnimation(): void {
     this.animStopped = true;
     this.introImage.anims.stop();
     this.introImage.anims.playReverse('intro');
-    this.introImage.on('animationcomplete', (): void => {
-      this.scene.start('GameScene');
-      this.scene.start('MainMenuScene');
-      this.scene.bringToTop('MainMenuScene');
-    }, this);
+    this.introImage.on('animationcomplete', this.changeScene, this);
   }
 
   public update(): void {
+    if (SKIP_INTRO) {
+      this.changeScene();
+      return;
+    }
+
     if (!this.animStopped && this.timesLooped > 2) {
       this.playEndingAnimation();
     }

@@ -16,7 +16,14 @@ const config: GameConfig = {
   banner: true,
   width: 1280,
   height: 720,
-  scene: [BootScene, LoadingScene, GameScene, HUDScene, MainMenuScene, GameOverScene],
+  scene: [
+    ...(SKIP_INTRO ? [] : [BootScene]),
+    LoadingScene,
+    GameScene,
+    HUDScene,
+    MainMenuScene,
+    GameOverScene,
+  ],
   scale: {
     parent: 'game',
     mode: Phaser.Scale.FIT,
