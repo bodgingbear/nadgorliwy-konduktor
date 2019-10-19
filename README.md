@@ -2,7 +2,7 @@
 
 Push people into the train
 
-This game was created during **PJATK Game Jam (2019)** and took **1st place**
+This game was created during [**PJATK Game Jam (2019)**](https://www.facebook.com/events/pjatk/game-jam-pjatk/397936107455945/) and took **1st place**
 
 ## Technologies used
 * JavaScript
