@@ -1,7 +1,7 @@
-
 # Nadgorliwy konduktor
 
 Push people into the train
+
 This game was created during **PJATK Game Jam (2019)** and took **1st place**
 
 ## Technologies used
