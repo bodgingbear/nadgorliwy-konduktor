@@ -12,6 +12,11 @@ This game was created during [**PJATK Game Jam (2019)**](https://www.facebook.co
 
 [https://konduktor.bodgingbear.dev](https://konduktor.bodgingbear.dev)
 
+## Controls
+
+* Move left and right using arrow keys
+* Push people into the train with `Q`
+
 ## Links
 
 GitHub: [https://github.com/bodgingbear/nadgorliwy-konduktor](https://github.com/bodgingbear/nadgorliwy-konduktor)
