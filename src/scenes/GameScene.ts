@@ -1,7 +1,8 @@
 import Passenger, { playerType } from '../objects/Passenger';
 import Conductor from '../objects/Conductor';
+import LevelsManager from '../objects/LevelsManager';
 import GameDataManager from '../objects/GameDataManager';
-import { Level, levels } from '../config/levels';
+import { Level } from '../config/levels';
 
 export default class GameScene extends Phaser.Scene {
     private passengersArr: Passenger[];
@@ -22,6 +23,8 @@ export default class GameScene extends Phaser.Scene {
 
     private conductor: Conductor;
 
+    private levelsManager: LevelsManager;
+
     private get gdm(): GameDataManager {
       return this.registry.get('gdm');
     }
@@ -34,6 +37,8 @@ export default class GameScene extends Phaser.Scene {
       this.passengersArr = [];
 
       this.trainLeft = false;
+
+      this.levelsManager = new LevelsManager();
     }
 
     private addToScore(passenger: Passenger, points = 10): void {
@@ -84,12 +89,12 @@ export default class GameScene extends Phaser.Scene {
 
       leftArrow.on('down', (): void => {
         const newRow = this.conductor.goLeft();
-        this.gdm.setConductorRow(newRow)
+        this.gdm.setConductorRow(newRow);
       });
 
       rightArrow.on('down', (): void => {
         const newRow = this.conductor.goRight();
-        this.gdm.setConductorRow(newRow)
+        this.gdm.setConductorRow(newRow);
       });
 
       const keyShoot = this.input.keyboard.addKey('Q');
@@ -120,12 +125,12 @@ export default class GameScene extends Phaser.Scene {
             }
 
             passengerSprite.hp -= 1;
+            hasDeleted = true;
             if (passengerSprite.hp === 0) {
               this.addToScore(passengerSprite);
               this.sound.play('passenger');
               passengerSprite.destroy();
               passengerSprite.rect.clear();
-              hasDeleted = true;
 
               // eslint-disable-next-line no-continue
               continue;
@@ -150,7 +155,7 @@ export default class GameScene extends Phaser.Scene {
         duration: 1000,
         onComplete: (): void => {
           this.trainDoor.play('door-open');
-          this.setupLevel(this, levels[this.gdm.currentLevel]);
+          this.setupLevel(this, this.levelsManager.generateLevel());
         },
       });
 
@@ -254,11 +259,16 @@ export default class GameScene extends Phaser.Scene {
 
     private setupLevel(
       game: Phaser.Scene,
-      { rowOnePassengers, rowTwoPassengers, rowThreePassengers }: Level,
+      level: Level,
     ): void {
+      this.gdm.setCurrentLevel(level);
+      const { rowOnePassengers, rowTwoPassengers, rowThreePassengers } = level;
+
       // eslint-disable-next-line no-restricted-syntax
-      for (const passenger of rowOnePassengers) {
-        const passengerTime = passenger.time;
+      for (let i = 0; i < rowOnePassengers.length; i += 1) {
+        const passenger = rowOnePassengers[i];
+        const lastPassenger = rowOnePassengers[i - 1] || { time: 0 };
+        const passengerTime = lastPassenger.time;
         const passengerType = passenger.playerType;
 
         // eslint-disable-next-line no-loop-func
@@ -276,9 +286,10 @@ export default class GameScene extends Phaser.Scene {
       }
 
 
-      // eslint-disable-next-line no-restricted-syntax
-      for (const passenger of rowTwoPassengers) {
-        const passengerTime = passenger.time;
+      for (let i = 0; i < rowTwoPassengers.length; i += 1) {
+        const passenger = rowTwoPassengers[i];
+        const lastPassenger = rowTwoPassengers[i - 1] || { time: 0 };
+        const passengerTime = lastPassenger.time;
         const passengerType = passenger.playerType;
 
         // eslint-disable-next-line no-loop-func
@@ -297,8 +308,10 @@ export default class GameScene extends Phaser.Scene {
       }
 
       // eslint-disable-next-line no-restricted-syntax
-      for (const passenger of rowThreePassengers) {
-        const passengerTime = passenger.time;
+      for (let i = 0; i < rowThreePassengers.length; i += 1) {
+        const passenger = rowThreePassengers[i];
+        const lastPassenger = rowThreePassengers[i - 1] || { time: 0 };
+        const passengerTime = lastPassenger.time;
         const passengerType = passenger.playerType;
 
         // eslint-disable-next-line no-loop-func

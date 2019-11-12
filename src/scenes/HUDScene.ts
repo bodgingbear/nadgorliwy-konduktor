@@ -40,7 +40,7 @@ export default class HUDScene extends Phaser.Scene {
   }
 
   private getCurrentLevel(): number {
-    return this.gdm.currentLevel;
+    return this.gdm.currentLevelNumber;
   }
 
   public create(): void {

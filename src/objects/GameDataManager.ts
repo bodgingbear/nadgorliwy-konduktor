@@ -1,7 +1,7 @@
-import { levels } from '../config/levels';
+import { Level } from '../config/levels';
 
 export default class GameDataManager {
-  public currentLevel: number;
+  public currentLevelNumber: number;
 
   public score: number;
 
@@ -17,8 +17,11 @@ export default class GameDataManager {
 
   public conductorRow: number;
 
+  public currentLevel: Level;
+
   public constructor() {
-    this.currentLevel = 0;
+    this.currentLevelNumber = 0;
+    this.currentLevel = null;
     this.score = 0;
     this.combo = 1;
     this.hp = 3;
@@ -28,11 +31,11 @@ export default class GameDataManager {
   }
 
   public nextLevel(): void {
-    this.currentLevel += 1;
+    this.currentLevelNumber += 1;
   }
 
-  public setCurrentLevel(n: number): void {
-    this.currentLevel = n;
+  public setCurrentLevel(level: Level): void {
+    this.currentLevel = level;
   }
 
   public setStartTime(t: number): void {
@@ -71,9 +74,13 @@ export default class GameDataManager {
   public getPercentageOfTimeElapsed(): number {
     const timeElapsed = Date.now() - this.startTime;
 
+    if (!this.currentLevel) {
+      return 0;
+    }
+
     const pottlNumerator = timeElapsed;
-    const pottlDenominator = (levels[this.currentLevel].timeToLeave * 1000);
-    const percentageOfTimeToLeave = pottlNumerator / pottlDenominator;
+    const { timeToLeave } = this.currentLevel;
+    const percentageOfTimeToLeave = pottlNumerator / timeToLeave;
 
     return percentageOfTimeToLeave;
   }
@@ -83,6 +90,6 @@ export default class GameDataManager {
   }
 
   public setConductorRow(newRow: number): void {
-    this.conductorRow = newRow
+    this.conductorRow = newRow;
   }
 }
