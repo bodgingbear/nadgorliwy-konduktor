@@ -19,8 +19,8 @@ This game was created during [**PJATK Game Jam (2019)**](https://www.facebook.co
 
 ## Links
 
-GitHub: [https://github.com/bodgingbear/nadgorliwy-konduktor](https://github.com/bodgingbear/nadgorliwy-konduktor)
-Video from showcase: [https://www.facebook.com/polskojaponska/](https://www.facebook.com/polskojaponska/videos/pcb.399691640613725/10156122533711517/?type=3&theater)
+* GitHub: [https://github.com/bodgingbear/nadgorliwy-konduktor](https://github.com/bodgingbear/nadgorliwy-konduktor)
+* Video from showcase: [https://www.facebook.com/polskojaponska/](https://www.facebook.com/polskojaponska/videos/pcb.399691640613725/10156122533711517/?type=3&theater)
 
 ## Screenshots
 | | |
