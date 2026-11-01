@@ -33,6 +33,8 @@ module.exports = merge(base, {
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
+            // CSS lives in static/css/, assets are referenced relative to the site root
+            options: { publicPath: '../../' },
           },
           require.resolve('css-loader'),
         ],

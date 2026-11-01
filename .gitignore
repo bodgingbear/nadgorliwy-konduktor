@@ -10,3 +10,7 @@ node_modules
 *.tsx
 yarn.lock
 package-lock.json
+
+# Cloudflare Worker assets
+cf-dist
+.wrangler

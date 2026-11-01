@@ -25,7 +25,7 @@ export default class GameDataManager {
     this.score = 0;
     this.combo = 1;
     this.hp = 3;
-    this.highScore = Number(localStorage.getItem('hs'));
+    this.highScore = Number(localStorage.getItem('nadgorliwy-konduktor:hs'));
     this.isGameRunning = false;
     this.conductorRow = 2;
   }
@@ -48,7 +48,7 @@ export default class GameDataManager {
 
     this.score += s;
     this.highScore = Math.max(this.highScore, this.score);
-    localStorage.setItem('hs', String(this.highScore));
+    localStorage.setItem('nadgorliwy-konduktor:hs', String(this.highScore));
 
     return this.score;
   }

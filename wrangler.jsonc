@@ -1,0 +1,15 @@
+{
+  "name": "bb-game-nadgorliwy-konduktor",
+  "account_id": "6fc5b81bd20c4443e29b2d63ecb3adf8",
+  "compatibility_date": "2026-10-01",
+  // Static assets only. Files live under projects/nadgorliwy-konduktor/play/
+  // so request paths on bodgingbear.dev map 1:1 to files.
+  "assets": { "directory": "cf-dist" },
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "bodgingbear.dev/projects/nadgorliwy-konduktor/play*",
+      "zone_name": "bodgingbear.dev"
+    }
+  ]
+}
