@@ -12,7 +12,7 @@ This game was created during [**PJATK Game Jam (2019)**](https://www.facebook.co
 
 ## Play online
 
-[https://konduktor.bodgingbear.dev](https://konduktor.bodgingbear.dev)
+[https://bodgingbear.dev/projects/nadgorliwy-konduktor/play/](https://bodgingbear.dev/projects/nadgorliwy-konduktor/play/)
 
 ## Controls
 
