@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "description": "Boilerplate, Game Examples, Cheat Sheets and Tutorials for Phaser 3 in TypeScript",
   "scripts": {
-    "build": "webpack --config webpack/prod.js",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --config webpack/prod.js",
     "now-build": "webpack --config webpack/prod.js",
     "start": "webpack-dev-server --config webpack/dev.js",
     "build:cf": "yarn build && rm -rf cf-dist && mkdir -p cf-dist/projects/nadgorliwy-konduktor/play && cp -R dist/. cf-dist/projects/nadgorliwy-konduktor/play/",
